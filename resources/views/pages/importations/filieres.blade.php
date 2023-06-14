@@ -20,67 +20,33 @@
     <section class="section">
         <div class="row">
             <div class="col-md-12">
-                <div id="loading-container" class="loading-container">
-                    <div id="page-loader" class="spinner-grow" style="width: 11em; height: 11em;" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <div id="loading-has-failed" class="center flex-column visually-hidden">
-                        <img width="200" height="200" src="{{asset('assets/images/error.png')}}" alt=""/>
-                        <h6 class="text-danger text-italic">Une erreur s'est produite lors du chargement des données ! Veuillez réessayer</h6>
-                        <button class="btn btn-primary">Réessayer</button>
-                    </div>
-                </div>
+            <div id="import-container">
+            <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Les differents Filières</h5>
 
-                <div class="card visually-hidden" id="summary-container">
-                    <div id="has-not-data" class="card-body center flex-column" style="height: 80vh;">
-                        <h6 class="text-italic">Aucune donnée n'a été importée pour l'instant</h6>
-                        <img width="200" height="200" src="{{asset('assets/images/cloud-computing.png')}}" alt=""/>
-                        <div class="mt-3">
-                            <button class="btn btn-outline-primary" onclick="showImportContainer()">Nouvelle importation</button>
-                        </div>
-                    </div>
-                    <div id="has-data" class="card-body center flex-column" style="height: 80vh;">
-                        <h6 class="text-italic">Des données ont déjà été importées</h6>
-                        <img width="200" height="200" src="{{asset('assets/images/import.png')}}" alt=""/>
-                        <div class="mt-3">
-                            <button class="btn btn-outline-info mr-1" onclick="showStoredDataContainer()">Consulter la liste</button>
-                            <button class="btn btn-outline-primary" onclick="showImportContainer()">Nouvelle importation</button>
-                        </div>
-                    </div>
-                </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">N°</th>
+                                            <th scope="col">Code</th>
+                                            <th scope="col">Intitulé</th>
+                                            <th scope="col">Filière</th>
+                                            <th scope="col">Niveau</th>
+                                            <th scope="col">Retirer</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="classes-result">
 
-                <div class="card" id="stored-data-container">
-                    <div class="card-body">
-                        <h5 class="card-title" style="position: relative;">
-                            <button onclick="showSummaryContainer()" style="position: absolute; right: 0;" class="btn btn-outline-danger btn-sm">
-                                <i class="bi bi-arrow-left-square"></i>
-                            </button>
-                            Filières importées
-                        </h5>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Code</th>
-                                        <th scope="col">Intitulé</th>
-                                        <th scope="col">Nombre de classes</th>
-                                        <th scope="col">Actions</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="stored-sectors-result">
-
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
+
                         </div>
-
                     </div>
-                </div>
-
-                <div id="import-container" class="visually-hidden">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title" style="position: relative;">
@@ -130,12 +96,12 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade mt-3" id="bordered-justified-profile" role="tabpanel" aria-labelledby="import-by-form-tab">
-                                    <form onsubmit="return false" class="row d-flex justify-content-center needs-validation" id="sector-form" novalidate>
+                                    <form onsubmit="return false" class="row d-flex justify-content-center needs-validation" id="classe-form" novalidate>
                                         <div class="col-md-7">
                                             <div class="row mb-3">
                                                 <label for="code" class="col-sm-2 col-form-label">Code: <span class="text-danger ql-size-huge">*</span></label>
                                                 <div class="col-sm-10">
-                                                    <input required minlength="2" maxlength="15" id="code" name="code" type="text" class="form-control" placeholder="Code de la filière">
+                                                    <input required minlength="2" maxlength="15" id="code" name="code" type="text" class="form-control" placeholder="Code de la classe">
                                                     <div class="invalid-feedback">
                                                         Le code est requis et doit comprendre entre 2 et 15 caractères !
                                                     </div>
@@ -144,15 +110,39 @@
                                             <div class="row mb-3">
                                                 <label for="code" class="col-sm-2 col-form-label">Intitulé: <span class="text-danger ql-size-huge">*</span></label>
                                                 <div class="col-sm-10">
-                                                    <input required minlength="3" maxlength="60" id="intitule" name="intitule" type="text" class="form-control" placeholder="Intitulé de la filière">
+                                                    <input required minlength="3" maxlength="60" id="intitule" name="intitule" type="text" class="form-control" placeholder="Intitulé de la classe">
                                                     <div class="invalid-feedback">
                                                         L'intitulé est requis et doit comprendre entre 3 et 60 caractères !
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row mb-3">
+                                                <label for="code" class="col-sm-2 col-form-label">Filière: <span class="text-danger ql-size-huge">*</span></label>
+                                                <div class="col-sm-10">
+                                                    <select id="code_filiere" name="code_filiere" class="form-select" required>
+                                                        <option hidden disabled selected="">De quelle filière est la classe ?</option>
+
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                        La filière est requise !
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label for="code" class="col-sm-2 col-form-label">Niveau: <span class="text-danger ql-size-huge">*</span></label>
+                                                <div class="col-sm-10">
+                                                    <select id="code_niveau" name="code_niveau" class="form-select" required>
+                                                        <option hidden disabled selected="">De quel niveau est la classe ?</option>
+
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                        Le niveau est requise !
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             <div class="d-flex justify-content-center">
-                                                <button onclick="submitSectorForm()" type="submit" class="btn btn-outline-primary">Ajouter</button>
+                                                <button onclick="submitClasseForm()" type="submit" class="btn btn-outline-primary">Ajouter</button>
                                             </div>
                                         </div>
                                     </form>
@@ -161,40 +151,7 @@
 
                         </div>
                     </div>
-
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Résultat</h5>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">N°</th>
-                                            <th scope="col">Code</th>
-                                            <th scope="col">Intitulé</th>
-                                            <th scope="col">Retirer</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="sectors-result">
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="d-grid gap-2 mt-3">
-                                    <button disabled id="import-button" onclick="onImport()" class="btn btn-primary" type="button">Importer</button>
-                                    <button id="import-loader" class="btn btn-primary visually-hidden" type="button" disabled="">
-                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                        Veuillez patienter...
-                                    </button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -204,8 +161,4 @@
 @section('customs-scripts')
     <script src="{{ asset('assets/js/share.js') }}"></script>
     <script src="{{ asset('assets/js/importations/filieres.js') }}"></script>
-    <script>
-        console.log({!! json_encode($filieres) !!});
-        makeFirstInitialisation({!! json_encode($filieres) !!});
-    </script>
 @endsection
