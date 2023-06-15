@@ -23,7 +23,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('classes') }}">
+                <a href="{{ route('classes.all') }}">
                     <i class="bi bi-circle"></i><span>Classes</span>
                 </a>
             </li>

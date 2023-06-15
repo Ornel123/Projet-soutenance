@@ -6,8 +6,11 @@ use App\Models\Niveau;
 use App\Http\Requests\StoreNiveauRequest;
 use App\Http\Requests\UpdateNiveauRequest;
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\NiveauImport;
 
 class NiveauController extends Controller
 {
@@ -116,9 +119,25 @@ class NiveauController extends Controller
     public function view_index()
     {
         $niveaux = Niveau::query()->paginate();
-        foreach($niveaux as $niveau){
-            $niveau->nombre_classes = $niveau->classes()->count();
-        }
+        // foreach($niveaux as $niveau){
+        //     $niveau->nombre_classes = $niveau->classes()->count();
+        // }
         return View::make('pages.importations.niveaux', ['niveaux' => $niveaux]);
+    }
+
+    public function add_niveau(Request $request)
+    {
+        if($request->file("niveau")){
+            $import = Excel::import(new NiveauImport, $request->file("niveau"));
+            $msg_success = "Data Uploaded Succesfully!";
+            $msg_danger = "Data Uploaded failed! ";
+            if ($import) {
+                return $msg_success;
+            }else{
+               return $msg_danger;
+            }
+        }else{
+            return dump($request->allFiles());
+        }
     }
 }

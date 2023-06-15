@@ -33,13 +33,29 @@
                                             <th scope="col">N°</th>
                                             <th scope="col">Code</th>
                                             <th scope="col">Intitulé</th>
-                                            <th scope="col">Filière</th>
-                                            <th scope="col">Niveau</th>
+                                            <th scope="col">Classe(S)</th>
                                             <th scope="col">Retirer</th>
                                         </tr>
                                         </thead>
                                         <tbody id="classes-result">
-
+                                            @foreach($filieres as $fil)
+                                                <tr>
+                                                    <td>{{$fil->id}}</td>
+                                                    <td>{{$fil->code}}</td>
+                                                    <td>{{$fil->intitule}}</td>
+                                                    <td>[
+                                                        @foreach($fil->classes as $class)
+                                                            <span>{{$class->intitule}} ,</span>
+                                                        @endforeach
+                                                        ]
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-outline-danger">
+                                                        <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -68,24 +84,18 @@
                             <div class="tab-content pt-2" id="borderedTabJustifiedContent">
                                 <div class="tab-pane fade mt-3 show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="import-by-file-tab">
                                     <div class="row d-flex flex-column justify-content-center align-items-center">
-                                        <div style="width: 450px">
-                                            <div class="row mb-3">
-                                                <label for="code" class="col-sm-3 col-form-label">Délimiteur: </label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option value="1">Point-virgule (;)</option>
-                                                        <option value="2">Virgule (;)</option>
-                                                        <option value="3">Tabulation (  )</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="drag-area" id="drag-area">
-                                            <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                            <h5 class="drag-header" id="drag-header-text">Glissez et déposez votre fichier ici</h5>
-                                            <span>OU</span>
-                                            <button class="btn btn-success browse-button" id="browse-button">Pacourez vos fichiers</button>
-                                            <input class="upload-input" id="upload-input" type="file" hidden>
+                                            <form
+                                            enctype="multipart/form-data"
+                                            method="POST"
+                                            style="display:flex;
+                                            justify-content:space-around;
+                                            flex-direction:column;
+                                            gap:10px;">
+                                                @CSRF
+                                                <input class="form-control" type="file" id="formFile" name="filiere" required accept=".xlsx,.csv" />
+                                                <button class="btn btn-success browse-button" id="browse-button">Ajouter</button>
+                                            </form>
                                         </div>
                                         <div class="text-md-center mt-3" id="imported-file-name" style="display: none;">
                                             <h6 id="file-name"></h6>
@@ -160,5 +170,5 @@
 
 @section('customs-scripts')
     <script src="{{ asset('assets/js/share.js') }}"></script>
-    <script src="{{ asset('assets/js/importations/filieres.js') }}"></script>
+
 @endsection

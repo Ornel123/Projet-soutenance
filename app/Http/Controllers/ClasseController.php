@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Classe;
 use App\Http\Requests\StoreClasseRequest;
 use App\Http\Requests\UpdateClasseRequest;
+use App\Imports\ClasseImport;
 use App\Models\Filiere;
 use App\Models\Niveau;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClasseController extends Controller
 {
@@ -135,5 +138,43 @@ class ClasseController extends Controller
             'niveaux' => $niveaux,
             'classes' => $classes
         ]);
+    }
+    public function add_classe(Request $request)
+    {
+        $filiere = Filiere::where('code',$request->filiere)->first();
+        $niveau = Niveau::where('code',$request->niveau)->first();
+        if($request->file("classe")){
+            $import = Excel::import(new ClasseImport($filiere->id,$niveau->id), $request->file("classe"));
+            $msg_success = "Data Uploaded Succesfully!";
+            $msg_danger = "Data Uploaded failed! ";
+            if ($import) {
+                return $msg_success;
+            }else{
+               return $msg_danger;
+            }
+        }else{
+            return dump($request->allFiles());
+        }
+    }
+
+    public function add_classe_form(Request $request){
+            $filiere = Filiere::where('code',$request->code_filiere)->first();
+            $niveau = Niveau::where('code',$request->code_niveau)->first();
+            $code = $request->code;
+            $intitule = $request->intitule;
+
+            $classe = new Classe();
+
+            $classe->code = $code;
+            $classe->intitule = $intitule;
+            $classe->filiere_id = $filiere->id;
+            $classe->niveau_id = $niveau->id;
+
+            if($classe->save()){
+                $request->flash("success","Document enregistre avec success");
+                return redirect()->route('classes.all');
+
+            }
+
     }
 }

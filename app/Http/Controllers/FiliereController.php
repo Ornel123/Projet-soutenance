@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Filiere;
 use App\Http\Requests\StoreFiliereRequest;
 use App\Http\Requests\UpdateFiliereRequest;
+use App\Imports\FiliereImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
@@ -13,6 +14,7 @@ use Spatie\SimpleExcel\SimpleExcelReader;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FiliereController extends Controller
 {
@@ -125,9 +127,24 @@ class FiliereController extends Controller
     public function view_index()
     {
         $filieres = Filiere::query()->paginate();
-        foreach($filieres as $filiere){
-            $filiere->nombre_classes = $filiere->classes()->count();
-        }
+        // foreach($filieres as $filiere){
+        //     $filiere->nombre_classes = $filiere->classes()->count();
+        // }
         return View::make('pages.importations.filieres', ['filieres' => $filieres]);
+    }
+    public function add_filiere(Request $request)
+    {
+        if($request->file("filiere")){
+            $import = Excel::import(new FiliereImport, $request->file("filiere"));
+            $msg_success = "Data Uploaded Succesfully!";
+            $msg_danger = "Data Uploaded failed! ";
+            if ($import) {
+                return $msg_success;
+            }else{
+               return $msg_danger;
+            }
+        }else{
+            return dump($request->allFiles());
+        }
     }
 }

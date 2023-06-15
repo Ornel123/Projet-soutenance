@@ -33,16 +33,20 @@ Route::group([
         'prefix' => 'filieres'
     ], function($router){
         Route::get('/', [FiliereController::class, 'view_index'])->name('filieres');
+        Route::post('/', [FiliereController::class, 'add_filiere'])->name('filieres_add');
     });
     Route::group([
         'prefix' => 'niveaux'
     ], function($router){
         Route::get('/', [NiveauController::class, 'view_index'])->name('niveaux');
+        Route::post('/', [NiveauController::class, 'add_niveau'])->name('niveaux_add');
     });
     Route::group([
         'prefix' => 'classes'
     ], function($router){
-        Route::get('/', [ClasseController::class, 'view_index'])->name('classes');
+        Route::get('/', [ClasseController::class, 'view_index'])->name('classes.all');
+        Route::post('/', [ClasseController::class, 'add_classe'])->name('classe_add');
+        Route::post('/form', [ClasseController::class, 'add_classe_form'])->name('classe_form_add');
     });
     Route::group([
         'prefix' => 'etudiants'
