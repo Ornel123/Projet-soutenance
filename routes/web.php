@@ -52,11 +52,15 @@ Route::group([
         'prefix' => 'etudiants'
     ], function($router){
         Route::get('/', [EtudiantController::class, 'view_index'])->name('etudiants');
+        Route::post('/', [EtudiantController::class, 'add_etudiant'])->name('etudiant_add');
+        Route::post('/form', [EtudiantController::class, 'store'])->name('etudiant_add_form');
     });
     Route::group([
         'prefix' => 'ues'
     ], function($router){
         Route::get('/', [UEController::class, 'view_index'])->name('ues');
+        Route::post('/', [UEController::class, 'add_ue'])->name('ue_add');
+        Route::post('/form',[UEController::class, 'add_ueForm'])->name('ue_form_add');
     });
     Route::group([
         'prefix' => 'notes'

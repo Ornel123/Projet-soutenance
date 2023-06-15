@@ -16,7 +16,6 @@ filieresSelect.addEventListener('change', function (event) {
 });
 
 function CalculMoyenne() {
-    //showImportLoader();
     let classe_id = 0;
     let filliere_id = 0;
     const filliereSelector = document.getElementById('filiere');
@@ -31,9 +30,6 @@ function CalculMoyenne() {
         if (this.readyState === 4) {
             if (this.status >= 200 && this.status < 300) {
                 const result = this.responseText;
-                //showSuccessToast('Les notes ont été importées avec succès !');
-                //notesList = [];
-                //setNotesListTableContent();
                 console.log(JSON.parse(result));
                 let arr = JSON.parse(result);
                 let v = 1;
@@ -53,7 +49,10 @@ function CalculMoyenne() {
     }
 
     xmlhttp.open('POST', '/api/CalculMoyenne', true);
+
     xmlhttp.setRequestHeader("Content-Type", "application/json");
+
     xmlhttp.send(JSON.stringify({ classe_id: classe_id, filliere_id: filliere_id }));
+
     console.log({ classe_id: classe_id, filliere_id: filliere_id });
 }

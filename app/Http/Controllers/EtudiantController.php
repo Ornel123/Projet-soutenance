@@ -6,10 +6,12 @@ use App\Models\Classe;
 use App\Models\Etudiant;
 use App\Http\Requests\StoreEtudiantRequest;
 use App\Http\Requests\UpdateEtudiantRequest;
+use App\Imports\EtudiantImport;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EtudiantController extends Controller
 {
@@ -46,30 +48,18 @@ class EtudiantController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'etudiants' => 'array',
-            'etudiants.*.matricule' => 'required|string|between:7,7|unique:etudiants,matricule',
-            'etudiants.*.noms' => 'required|string|between:3,60',
-            'etudiants.*.sexe' => 'required|string',
-            'etudiants.*.date_naissance' => 'required|string',
-            'etudiants.*.code_classe' => 'required|string|between:2,15|exists:classes,code',
-        ]);
+        $etudiant = new Etudiant();
+        $classe = Classe::where('code',$request->code_classe)->first();
 
-        if($validator->fails()){
-            abort(400, $validator->errors()->toJson());
-        }
+        $etudiant->matricule = $request->matricule;
+        $etudiant->noms = $request->noms;
+        $etudiant->sexe = $request->sexe;
+        $etudiant->date_naissance = $request->date_naissance;
+        $etudiant->classe_id = $classe->id;
 
-        foreach($request->etudiants as $etd){
-            Etudiant::create([
-                'matricule' => $etd['matricule'],
-                'noms' => $etd['noms'],
-                'sexe' => $etd['sexe'],
-                'date_naissance' => $etd['date_naissance'],
-                'classe_id' => Classe::query()->where('code', $etd['code_classe'])->first()->id,
-            ]);
-        }
+        $etudiant->save();
 
-        return Response(json_encode('Les étudiants ont été enregistrés avec succès !', 201));
+        return redirect()->route('etudiants');
     }
 
     /**
@@ -133,5 +123,16 @@ class EtudiantController extends Controller
             'classes' => $classes,
             'etudiants' => $etudiants,
         ]);
+    }
+
+    public function add_etudiant(Request $request){
+
+        $classe = Classe::where('code',$request->classCode)->first();
+
+        if($request->file("etudiant_file")){
+            $import = Excel::import(new EtudiantImport($classe->id),$request->file("etudiant_file"));
+
+            return redirect()->route('etudiants');
+        }
     }
 }

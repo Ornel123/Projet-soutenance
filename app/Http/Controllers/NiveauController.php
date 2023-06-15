@@ -129,10 +129,9 @@ class NiveauController extends Controller
     {
         if($request->file("niveau")){
             $import = Excel::import(new NiveauImport, $request->file("niveau"));
-            $msg_success = "Data Uploaded Succesfully!";
             $msg_danger = "Data Uploaded failed! ";
             if ($import) {
-                return $msg_success;
+                return redirect()->route('niveaux');
             }else{
                return $msg_danger;
             }

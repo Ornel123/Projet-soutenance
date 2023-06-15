@@ -20,69 +20,50 @@
     <section class="section">
         <div class="row">
             <div class="col-md-12">
-                <div id="loading-container" class="loading-container">
-                    <div id="page-loader" class="spinner-grow" style="width: 11em; height: 11em;" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <div id="loading-has-failed" class="center flex-column visually-hidden">
-                        <img width="200" height="200" src="{{asset('assets/images/error.png')}}" alt=""/>
-                        <h6 class="text-danger text-italic">Une erreur s'est produite lors du chargement des données ! Veuillez réessayer</h6>
-                        <button class="btn btn-primary">Réessayer</button>
-                    </div>
-                </div>
+                <div id="import-container">
 
-                <div class="card visually-hidden" id="summary-container">
-                    <div id="has-not-data" class="card-body center flex-column" style="height: 80vh;">
-                        <h6 class="text-italic">Aucune donnée n'a été importée pour l'instant</h6>
-                        <img width="200" height="200" src="{{asset('assets/images/cloud-computing.png')}}" alt=""/>
-                        <div class="mt-3">
-                            <button class="btn btn-outline-primary" onclick="showImportContainer()">Nouvelle importation</button>
-                        </div>
-                    </div>
-                    <div id="has-data" class="card-body center flex-column" style="height: 80vh;">
-                        <h6 class="text-italic">Des données ont déjà été importées</h6>
-                        <img width="200" height="200" src="{{asset('assets/images/import.png')}}" alt=""/>
-                        <div class="mt-3">
-                            <button class="btn btn-outline-info mr-1" onclick="showStoredDataContainer()">Consulter la liste</button>
-                            <button class="btn btn-outline-primary" onclick="showImportContainer()">Nouvelle importation</button>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="card visually-hidden" id="stored-data-container">
-                    <div class="card-body">
-                        <h5 class="card-title" style="position: relative;">
-                            <button onclick="showSummaryContainer()" style="position: absolute; right: 0;" class="btn btn-outline-danger btn-sm">
-                                <i class="bi bi-arrow-left-square"></i>
-                            </button>
-                            Etudiants importés
-                        </h5>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Unités d'Enseignement</h5>
+                     <div class="col-md-12">
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Matricule</th>
-                                        <th scope="col">Noms & Prénoms</th>
-                                        <th scope="col">Sexe</th>
-                                        <th scope="col">Date de naissance</th>
-                                        <th scope="col">Classe</th>
-                                        <th scope="col">Actions</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="stored-students-result">
-
-                                    </tbody>
-                                </table>
+                            <div class="row">
+                <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">N°</th>
+                                            <th scope="col">Matricule</th>
+                                            <th scope="col">Noms & Prénoms</th>
+                                            <th scope="col">Sexe</th>
+                                            <th scope="col">Date de naissance</th>
+                                            <th scope="col">Classe</th>
+                                            <th scope="col">Retirer</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="ues-result">
+                                            @foreach($etudiants as $etud)
+                                            <tr>
+                                                <td>{{$etud->id}}</td>
+                                                <td>{{$etud->matricule}}</td>
+                                                <td>{{$etud->noms}}</td>
+                                                <td>{{$etud->sexe}}</td>
+                                                <td>{{$etud->date_naissance}}</td>
+                                                <td>{{$etud->classe->intitule}}</td>
+                                                <td>
+                                                <button class="btn btn-outline-danger">
+                                                        <i class="bi bi-trash"></i>
+                                                        </button>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
+
                         </div>
-
                     </div>
-                </div>
-
-                <div id="import-container" class="visually-hidden">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title" style="position: relative;">
@@ -102,26 +83,26 @@
                                 </li>
                             </ul>
                             <div class="tab-content pt-2" id="borderedTabJustifiedContent">
-                                <div class="tab-pane fade mt-3 show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="import-by-file-tab">
+                            <div class="tab-pane fade mt-3 show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="import-by-file-tab">
                                     <div class="row d-flex flex-column justify-content-center align-items-center">
-                                        <div style="width: 450px">
-                                            <div class="row mb-3">
-                                                <label for="code" class="col-sm-3 col-form-label">Délimiteur: </label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option value="1">Point-virgule (;)</option>
-                                                        <option value="2">Virgule (;)</option>
-                                                        <option value="3">Tabulation (  )</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="drag-area" id="drag-area">
-                                            <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                            <h5 class="drag-header" id="drag-header-text">Glissez et déposez votre fichier ici</h5>
-                                            <span>OU</span>
-                                            <button class="btn btn-success browse-button" id="browse-button">Pacourez vos fichiers</button>
-                                            <input class="upload-input" id="upload-input" type="file" hidden>
+                                            <form
+                                            enctype="multipart/form-data"
+                                            method="POST"
+                                            style="display:flex;
+                                            justify-content:space-around;
+                                            flex-direction:column;
+                                            gap:10px;">
+                                                @CSRF
+                                                <select id="code_niveau" name="classCode" class="form-select" required>
+                                                        <option selected disabled>Choissisez la classe</option>
+                                                        @foreach($classes as $clas)
+                                                            <option value="{{$clas->code}}">{{$clas->intitule}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                <input class="form-control" type="file" id="formFile" name="etudiant_file" required accept=".xlsx,.csv" />
+                                                <button class="btn btn-success browse-button" id="browse-button">Ajouter</button>
+                                            </form>
                                         </div>
                                         <div class="text-md-center mt-3" id="imported-file-name" style="display: none;">
                                             <h6 id="file-name"></h6>
@@ -132,7 +113,8 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade mt-3" id="bordered-justified-profile" role="tabpanel" aria-labelledby="import-by-form-tab">
-                                    <form onsubmit="return false" class="row d-flex justify-content-center needs-validation" id="student-form" novalidate>
+                                <form method="POST" action="{{route('etudiant_add_form')}}" class="row d-flex justify-content-center needs-validation" id="student-form">
+                                    @CSRF
                                         <div class="col-md-7">
                                             <div class="row mb-3">
                                                 <label for="matricule" class="col-sm-2 col-form-label">Matricule: <span class="text-danger ql-size-huge">*</span></label>
@@ -205,41 +187,6 @@
 
                         </div>
                     </div>
-
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Résultat</h5>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">N°</th>
-                                            <th scope="col">Matricule</th>
-                                            <th scope="col">Noms & Prénoms</th>
-                                            <th scope="col">Sexe</th>
-                                            <th scope="col">Date de naissance</th>
-                                            <th scope="col">Classe</th>
-                                            <th scope="col">Retirer</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="students-result">
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="d-grid gap-2 mt-3">
-                                    <button disabled id="import-button" onclick="onImport()" class="btn btn-primary" type="button">Importer</button>
-                                    <button id="import-loader" class="btn btn-primary visually-hidden" type="button" disabled="">
-                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                        Veuillez patienter...
-                                    </button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
                 </div>
 
             </div>
@@ -252,7 +199,5 @@
     <script src="{{ asset('assets/js/share.js') }}"></script>
     <script src="{{ asset('assets/js/importations/etudiants.js') }}"></script>
     <script>
-        console.log({!! json_encode($classes) !!});
-        makeFirstInitialisation({!! json_encode($etudiants) !!});
     </script>
 @endsection

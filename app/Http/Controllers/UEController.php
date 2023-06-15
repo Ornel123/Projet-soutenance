@@ -6,10 +6,15 @@ use App\Models\Classe;
 use App\Models\UE;
 use App\Http\Requests\StoreUERequest;
 use App\Http\Requests\UpdateUERequest;
-use http\Env\Request;
+use App\Imports\UeImport;
+// use http\Env\Request;
+
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UEController extends Controller
 {
@@ -138,4 +143,44 @@ class UEController extends Controller
             'ues' => $ues,
         ]);
     }
+
+    public function add_ue(Request $request){
+
+        $classe = Classe::where('code',$request->classCode)->first();
+        if($request->file("ue_file")){
+            $import = Excel::import(new UeImport($classe->id), $request->file("ue_file"));
+
+            return redirect()->route('ues');
+        }
+
+    }
+
+    public function add_ueForm(Request $request){
+
+        $ue = new UE();
+        $classe = Classe::where('code',$request->code_classe)->first();
+
+        $ue->classe_id = $classe->id;
+        $ue->code = $request->code;
+        $ue->intitule = $request->intitule;
+        $ue->semestre = $request->semestre;
+        $ue->credit = $request->credit;
+        $ue->ue_optionelle = testValue($request->ue_optionelle);
+        $ue->tp_optionel = testValue($request->tp_optionele);
+        $ue->save();
+
+        return redirect()->route('ues');
+
+
+    }
+
+}
+function testValue($value){
+    if ($value == 'non' || $value == 'Non' || $value == 'NON' || $value == 'no' || $value == 'No' || $value == false || $value == 'flase'){
+        return false;
+    }
+    if ($value == 'oui' || $value == 'Oui' || $value == 'OUI' || $value == 'yes' || $value == 'Yes' || $value == true || $value == 'true'){
+        return true;
+    }
+    return false;
 }
