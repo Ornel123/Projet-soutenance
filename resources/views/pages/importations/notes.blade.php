@@ -22,7 +22,7 @@
                 <div id="import-container">
                 <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Les differents Niveau</h5>
+                            <h5 class="card-title">Les differents notes</h5>
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -40,7 +40,18 @@
                                     </tr>
                                     </thead>
                                     <tbody id="stored-notes-result">
-
+                                        @foreach($notes as $note)
+                                        <tr>
+                                            <td>{{$note->id}}</td>
+                                            <td>{{$note->etudiant->matricule}}</td>
+                                            <td>{{$note->etudiant->noms}}</td>
+                                            <td>{{$note->ue->intitule}}</td>
+                                            <td>{{$note->cc}}</td>
+                                            <td>{{$note->tp}}</td>
+                                            <td>{{$note->sn}}</td>
+                                            <td></td>
+                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                                 </div>
@@ -54,7 +65,7 @@
                                 <button onclick="showSummaryContainer()" style="position: absolute; right: 0;" class="btn btn-outline-danger btn-sm">
                                     <i class="bi bi-arrow-left-square"></i>
                                 </button>
-                                Ajouter des niveau
+                                Ajouter des notes
                             </h5>
 
                             <!-- Bordered Tabs Justified -->
@@ -69,7 +80,7 @@
                             <div class="tab-content pt-2" id="borderedTabJustifiedContent">
                             <div class="tab-pane fade mt-3 show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="import-by-file-tab">
                                     <div class="row d-flex flex-column justify-content-center align-items-center">
-                                        <div class="drag-area" id="drag-area">
+                                        <div>
                                             <form
                                             enctype="multipart/form-data"
                                             method="POST"
@@ -78,7 +89,13 @@
                                             flex-direction:column;
                                             gap:10px;">
                                                 @CSRF
-                                                <input class="form-control" type="file" id="formFile" name="niveau" required accept=".xlsx,.csv" />
+                                                <select id="code_ue" name="ueCode" class="form-select" required>
+                                                    <option disabled selected hidden value="">De quelle UE est la note ?</option>
+                                                    @foreach($ues as $ue)
+                                                        <option value="{{$ue->code}}">{{$ue->code}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <input class="form-control" type="file" id="formFile" name="notes" required accept=".xlsx,.csv" />
                                                 <button class="btn btn-success browse-button" id="browse-button">Ajouter</button>
                                             </form>
                                         </div>
@@ -91,8 +108,38 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade mt-3" id="bordered-justified-profile" role="tabpanel" aria-labelledby="import-by-form-tab">
-                                <form onsubmit="return false" class="row d-flex justify-content-center needs-validation" id="note-form" novalidate>
+                                <form class="row d-flex justify-content-center needs-validation" id="note-form" novalidate>
                                         <div class="col-md-7">
+                                            <div class="mb-3">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="cc" id="inlineCheckbox1" value="cc">
+                                                    <label class="form-check-label" for="inlineCheckbox1">CC</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="sn" id="inlineCheckbox2" value="sn">
+                                                    <label class="form-check-label" for="inlineCheckbox2">SN</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="tp" type="checkbox" id="inlineCheckbox2" value="tp">
+                                                    <label class="form-check-label" for="inlineCheckbox2">TP</label>
+                                                </div>
+                                            </div>
+                                            </div>
+
+                                        <div class="row mb-3">
+                                                <label for="matricule_etudiant" class="col-sm-2 col-form-label">UE: <span class="text-danger ql-size-huge">*</span></label>
+                                                <div class="col-sm-10">
+                                                <select id="code_ue" name="code_ue" class="form-select" required>
+                                                    <option disabled selected hidden value="">De quelle UE est la note ?</option>
+                                                    @foreach($ues as $ue)
+                                                        <option value="{{$ue->code}}">{{$ue->code}}</option>
+                                                    @endforeach
+                                                </select>
+                                                    <div class="invalid-feedback">
+                                                    L'UE est requise !
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="row mb-3">
                                                 <label for="matricule_etudiant" class="col-sm-2 col-form-label">Matricule: <span class="text-danger ql-size-huge">*</span></label>
                                                 <div class="col-sm-10">

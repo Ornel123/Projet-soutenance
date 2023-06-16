@@ -66,11 +66,13 @@ Route::group([
         'prefix' => 'notes'
     ], function($router){
         Route::get('/', [NoteController::class, 'view_index'])->name('notes');
+        Route::post('/', [NoteController::class, 'add_notes'])->name('notes_add');
     });
     Route::group([
         'prefix' => 'calculmoyenne'
     ], function($router){
         Route::get('/', [CalculMoyenneController::class, 'view_index'])->name('calculmoyenne');
+        Route::post('/', [CalculMoyenneController::class, 'calculate'])->name('calculmoyenne_spec');
     });
     Route::group([
         'prefix' => 'deliberation'

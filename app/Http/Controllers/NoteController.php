@@ -6,11 +6,13 @@ use App\Models\Etudiant;
 use App\Models\Note;
 use App\Http\Requests\StoreNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
+use App\Imports\NoteImport;
 use App\Models\UE;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class NoteController extends Controller
 {
@@ -138,5 +140,16 @@ class NoteController extends Controller
             'notes' => $notes,
             'ues' => $ues
         ]);
+    }
+
+    public function add_notes(Request $request){
+        $ue = UE::where('code',$request->ueCode)->first();
+        $anneScholaire = "2020/2021";
+
+        if($request->file("notes")){
+            $import = Excel::import(new NoteImport($ue->id,$anneScholaire),$request->file("notes"));
+
+            return redirect()->route('notes');
+        }
     }
 }
