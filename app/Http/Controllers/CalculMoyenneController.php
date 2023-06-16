@@ -11,6 +11,7 @@ use App\Http\Requests\StoreUERequest;
 use App\Http\Requests\UpdateUERequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 
@@ -108,10 +109,20 @@ class CalculMoyenneController extends Controller
     }
 
     public function calculate(Request $request){
+
         $classe_select = Classe::where('id',$request->classe)->first();
         $classes = Classe::all();
         $filieres = Filiere::all();
-        return View::make('pages.importations.calculmoyenne', ['classes' => $classes, 'filieres' => $filieres,'selected_classe'=>$classe_select]);
+
+        $notes = Note::whereIn('u_e_id', $classe_select->ue->pluck('id')->toArray())->get();
+
+        return View::make('pages.importations.calculmoyenne',
+            [
+                'classes' => $classes,
+                'filieres' => $filieres,
+                'selected_classe'=>$classe_select,
+                'notes'=>$notes
+            ]);
 
     }
 }

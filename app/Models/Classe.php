@@ -29,6 +29,10 @@ class Classe extends Model
     {
         return $this->belongsTo(Niveau::class);
     }
+    public function ue()
+    {
+        return $this->hasMany(UE::class);
+    }
 
 
 }
