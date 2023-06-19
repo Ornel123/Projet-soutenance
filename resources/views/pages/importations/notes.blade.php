@@ -54,9 +54,13 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+
                                 </div>
                             </div>
+                            <div class="pagination">
+                                {!! $notes->links() !!}
 
+                                </div>
                         </div>
                     </div>
                     <div class="card">

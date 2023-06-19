@@ -142,6 +142,9 @@ class CalculMoyenneController extends Controller
             return $point * $credit;
         }
 
+        $mgpMin = $request->mgpMin ?? 1.5;
+        $echecNum = $request->echecNum ?? 2;
+
         $classe_select = Classe::where('id',$request->classe)->first();
 
         $class_Students = $classe_select->etudiants;
@@ -157,17 +160,17 @@ class CalculMoyenneController extends Controller
             $noteManquant = 0;
 
             foreach ($courses as $course) {
-                $note = $course->notes()->where('etudiant_id', $student->id)->get();
+                $note = $course->notes()->where('etudiant_id', $student->id)->first();
                     if($note){
                         if ($course->semestre == 1) {
-                            $totalScore = $note[0]["cc"] + $note[0]["sn"] + $note[0]["tp"];
+                            $totalScore = $note["cc"] + $note["sn"] + $note["tp"];
                             $finalpoint = getPoint($totalScore,$course->credit);
                             if($finalpoint < 1){
                                 $nombreEchec += 1;
                             }
                             $semesterOneTotal += $finalpoint;
                         } else if ($course->semestre == 2) {
-                            $totalScore = $note[0]["cc"] + $note[0]["sn"] + $note[0]["tp"];
+                            $totalScore = $note["cc"] + $note["sn"] + $note["tp"];
                             $finalpoint = getPoint($totalScore,$course->credit);
                             $semesterTwoTotal += $finalpoint;
                         }
@@ -183,7 +186,9 @@ class CalculMoyenneController extends Controller
                 $semesterOneTotal,
                 $semesterTwoTotal,
                 $nombreEchec,
-                $noteManquant
+                $noteManquant,
+                $mgpMin,
+                $echecNum
 
             );
             array_push($classResult,$result);
@@ -195,7 +200,9 @@ class CalculMoyenneController extends Controller
                 'classes' => $classes,
                 'filieres' => $filieres,
                 'lesNotes'=>$classResult,
-                'selected_classe'=>$classe_select
+                'selected_classe'=>$classe_select,
+                'mgpMinimum'=>$mgpMin,
+                'echecMax'=>$echecNum
             ]);
 
     }
@@ -218,7 +225,7 @@ class EtudiantResult{
     public $numbreEchec;
     public $noteManquant;
 
-    function __construct($mat, $sem1, $sem2 ,$echec, $manquant) {
+    function __construct($mat, $sem1, $sem2 ,$echec, $manquant,$mgpMin,$echecNum) {
         $this->matricule = $mat;
         $this->sem1Total = $sem1;
         $this->sem2Total = $sem2;
@@ -233,14 +240,17 @@ class EtudiantResult{
         $this->moyen20 = (($sem1 + $sem2)/60) * 5;
 
         $maMgp = ($sem1 + $sem2)/60;
-        if($maMgp > 2 && $echec < 1 && $manquant < 1){
+        if($maMgp >= 2 && $echec < 1 && $manquant < 1){
             $this->mention = "Admis";
-        }else if($maMgp > 2 && $echec == 1){
+        }else if($maMgp >= 2 && $echec == 1){
             $this->mention = "Autorisé";
+        }else if ($maMgp < 2 && $maMgp > $mgpMin && $manquant == 0 && $echec <= 2 && $echec <= $echecNum){
+            $this->mention = "deliberer";
         }else if ($maMgp < 2){
             $this->mention = "Reprendre";
-        } else{
-            $this->mention = "----";
+        }
+        else{
+            $this->mention = "Eliminé";
         }
       }
 }
