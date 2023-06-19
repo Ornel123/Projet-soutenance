@@ -150,9 +150,6 @@ class CalculMoyenneController extends Controller
         $classResult = array();
 
         foreach($class_Students as $student){
-
-
-
             $courses = $class_Subjects;
             $semesterOneTotal = 0;
             $semesterTwoTotal = 0;
