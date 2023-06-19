@@ -96,8 +96,8 @@
                                                         <td>{{$note->sem1Total}}</td>
                                                         <td>{{$note->sem2Total}}</td>
                                                         <td>{{$note->moyenTotal}}</td>
-                                                        <td>{{$note->mgp}}</td>
-                                                        <td>{{$note->moyen20}}</td>
+                                                        <td>{{number_format($note->mgp, 1)}}</td>
+                                                        <td>{{number_format($note->moyen20, 1)}}</td>
                                                         <td>{{$note->mention}}</td>
                                                         <td>{{$note->numbreEchec}}</td>
                                                         <td>{{$note->noteManquant}}</td>

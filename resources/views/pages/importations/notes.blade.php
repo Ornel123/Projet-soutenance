@@ -92,7 +92,7 @@
                                                 <select id="code_ue" name="ueCode" class="form-select" required>
                                                     <option disabled selected hidden value="">De quelle UE est la note ?</option>
                                                     @foreach($ues as $ue)
-                                                        <option value="{{$ue->code}}">{{$ue->code}}</option>
+                                                        <option value="{{$ue->code}}">{{$ue->intitule}}</option>
                                                     @endforeach
                                                 </select>
                                                 <input class="form-control" type="file" id="formFile" name="notes" required accept=".xlsx,.csv" />
