@@ -108,10 +108,101 @@ class CalculMoyenneController extends Controller
     }
 
     public function calculate(Request $request){
-        $classe_select = Classe::where('id',$request->classe)->first();
-        $classes = Classe::all();
-        $filieres = Filiere::all();
-        return View::make('pages.importations.calculmoyenne', ['classes' => $classes, 'filieres' => $filieres,'selected_classe'=>$classe_select]);
+            $classe = Classe::where('id',$request->classe)->first();
+
+            $allNotes = Note::query()->get();
+            $cusNotes = [];
+            foreach($allNotes as $note){
+                $note->etudiant = $note->etudiant()->first();
+                $note->ue = $note->ue()->first();
+                // if($note["ue"]["code"] == $request->filliere_id){
+                //   array_push($notes, $note);
+                // }
+                array_push($cusNotes, $note);
+            }
+    //// Remplir un tableaux avec les informations de chaque élève
+
+            $students = [];
+            foreach($cusNotes as $note){
+                $found = false;
+                $studentsCount = count($students);
+                $i = 0;
+                while( $i < $studentsCount ){
+                    if($students[$i]["noms"] == $note["etudiant"]["noms"]){
+                        $found = true;
+                            if($note["ue"]["semestre"] == "1"){
+                                if($note["sn"] != null){
+                                    $students[$i]["sn1"] = $note["sn"];
+                                }
+                                 if($note["cc"] != null){
+                                    $students[$i]["cc1"] = $note["cc"];
+                                }
+                                 if($note["tp"] != null){
+                                    $students[$i]["tp1"] = $note["tp"];
+                                }
+                            }else{
+                                if($note["sn"] != null){
+                                    $students[$i]["sn2"] = $note["sn"];
+                                }
+                                 if($note["cc"] != null){
+                                    $students[$i]["cc2"] = $note["cc"];
+                                }
+                                 if($note["tp"] != null){
+                                    $students[$i]["tp2"] = $note["tp"];
+                                }
+                            }
+                    }
+                    $i++;
+                }
+
+                if($found == false AND $note["ue"]["classe_id"] == $request->classe_id){
+
+                    if($note["ue"]["semestre"] == "1"){
+                        array_push($students, ["noms" => $note["etudiant"]["noms"], "matricule" => $note["etudiant"]["matricule"], "code" => $note["ue"]["code"], "cc1" => $note["cc"], "tp1" => $note["tp"], "sn1" => $note["sn"], "cc2" => 0, "tp2" => 0, "sn2" => 0, "moyenne1" => 0, "moyenne2" => 0, "mention" => ""]);
+                    }else if($note["ue"]["semestre"] == "2"){
+                        array_push($students, ["noms" => $note["etudiant"]["noms"], "matricule" => $note["etudiant"]["matricule"], "code" => $note["ue"]["code"], "cc1" => 0, "tp1" => 0, "sn1" => 0, "cc2" => $note["cc"], "tp2" => $note["tp"], "sn2" => $note["sn"], "moyenne1" => 0, "moyenne2" => 0, "mention" => ""]);
+                    }
+                }
+            }
+
+    // Remplir le tableau d'étudiant avec leurs moyennes
+                $studentsCount = count($students);
+                 $i = 0;
+                while( $i < $studentsCount ){
+                   $total1 = 0;
+                   if($students[$i]["sn1"] != null){
+                    $total1 += $students[$i]["sn1"];
+                }
+                 if($students[$i]["cc1"] != null){
+                    $total1 += $students[$i]["cc1"];
+                }
+                 if($students[$i]["tp1"] != null){
+                    $total1 += $students[$i]["tp1"];
+                }
+                   $students[$i]["moyenne1"] = $total1/5;
+
+                   $total2 = 0;
+                   if($students[$i]["sn2"] != null){
+                    $total2 += $students[$i]["sn2"];
+                }
+                 if($students[$i]["cc2"] != null){
+                    $total2 += $students[$i]["cc2"];
+                }
+                 if($students[$i]["tp2"] != null){
+                    $total2 += $students[$i]["tp2"];
+                }
+                   $students[$i]["moyenne2"] = $total2/5;
+
+
+                   if(($students[$i]["sn1"] == null OR $students[$i]["cc1"] == null OR $students[$i]["tp1"] == null OR $students[$i]["sn2"] == null OR $students[$i]["cc2"] == null OR $students[$i]["tp2"] == null) OR ($total1+$total2) < 70){
+                    $students[$i]["mention"] = "éliminé";
+                   }else{
+                    $students[$i]["mention"] = "retenu";
+                   }
+                   $i++;
+                }
+
+
 
     }
 }
