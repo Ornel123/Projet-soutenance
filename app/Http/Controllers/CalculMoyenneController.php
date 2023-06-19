@@ -9,8 +9,10 @@ use App\Models\Note;
 use App\Models\CalculMoyenne;
 use App\Http\Requests\StoreUERequest;
 use App\Http\Requests\UpdateUERequest;
+use App\Models\Etudiant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 
@@ -108,101 +110,137 @@ class CalculMoyenneController extends Controller
     }
 
     public function calculate(Request $request){
-            $classe = Classe::where('id',$request->classe)->first();
+        $classes = Classe::all();
+        $filieres = Filiere::all();
 
-            $allNotes = Note::query()->get();
-            $cusNotes = [];
-            foreach($allNotes as $note){
-                $note->etudiant = $note->etudiant()->first();
-                $note->ue = $note->ue()->first();
-                // if($note["ue"]["code"] == $request->filliere_id){
-                //   array_push($notes, $note);
-                // }
-                array_push($cusNotes, $note);
+        function getPoint($total, $credit){
+            if($total < 34.99 ){
+                $point = 0;
+            }else if($total >= 35 && $total <= 39.99 ){
+                $point = 1;
+            }else if($total >= 40 && $total <= 44.99 ){
+                $point = 1.30;
+            }else if($total >= 45 && $total <= 49.99 ){
+                $point = 1.70;
+            }else if($total >= 50 && $total <= 54.99 ){
+                $point = 2;
+            }else if($total >= 55 && $total <= 59.99 ){
+                $point = 2.30;
+            }else if($total >= 60 && $total <= 64.99 ){
+                $point = 2.70;
+            }else if($total >= 65 && $total <= 69.99 ){
+                $point = 3;
+            }else if($total >= 70 && $total <= 74.99 ){
+                $point = 3.30;
+            }else if($total >= 75 && $total <= 79.99 ){
+                $point = 3.70;
+            }else if($total >= 80 && $total <= 100 ){
+                $point = 4;
+            }else{
+                $point = 4;
             }
-    //// Remplir un tableaux avec les informations de chaque élève
+            return $point * $credit;
+        }
 
-            $students = [];
-            foreach($cusNotes as $note){
-                $found = false;
-                $studentsCount = count($students);
-                $i = 0;
-                while( $i < $studentsCount ){
-                    if($students[$i]["noms"] == $note["etudiant"]["noms"]){
-                        $found = true;
-                            if($note["ue"]["semestre"] == "1"){
-                                if($note["sn"] != null){
-                                    $students[$i]["sn1"] = $note["sn"];
-                                }
-                                 if($note["cc"] != null){
-                                    $students[$i]["cc1"] = $note["cc"];
-                                }
-                                 if($note["tp"] != null){
-                                    $students[$i]["tp1"] = $note["tp"];
-                                }
-                            }else{
-                                if($note["sn"] != null){
-                                    $students[$i]["sn2"] = $note["sn"];
-                                }
-                                 if($note["cc"] != null){
-                                    $students[$i]["cc2"] = $note["cc"];
-                                }
-                                 if($note["tp"] != null){
-                                    $students[$i]["tp2"] = $note["tp"];
-                                }
+        $classe_select = Classe::where('id',$request->classe)->first();
+
+        $class_Students = $classe_select->etudiants;
+        $class_Subjects =  $classe_select->ue;
+
+        $classResult = array();
+
+        foreach($class_Students as $student){
+            $courses = $class_Subjects;
+            $semesterOneTotal = 0;
+            $semesterTwoTotal = 0;
+            $nombreEchec = 0;
+            $noteManquant = 0;
+
+            foreach ($courses as $course) {
+                $note = $course->notes()->where('etudiant_id', $student->id)->get();
+                    if($note){
+                        if ($course->semestre == 1) {
+                            $totalScore = $note[0]["cc"] + $note[0]["sn"] + $note[0]["tp"];
+                            $finalpoint = getPoint($totalScore,$course->credit);
+                            if($finalpoint < 1){
+                                $nombreEchec += 1;
                             }
+                            $semesterOneTotal += $finalpoint;
+                        } else if ($course->semestre == 2) {
+                            $totalScore = $note[0]["cc"] + $note[0]["sn"] + $note[0]["tp"];
+                            $finalpoint = getPoint($totalScore,$course->credit);
+                            $semesterTwoTotal += $finalpoint;
+                        }
                     }
-                    $i++;
-                }
-
-                if($found == false AND $note["ue"]["classe_id"] == $request->classe_id){
-
-                    if($note["ue"]["semestre"] == "1"){
-                        array_push($students, ["noms" => $note["etudiant"]["noms"], "matricule" => $note["etudiant"]["matricule"], "code" => $note["ue"]["code"], "cc1" => $note["cc"], "tp1" => $note["tp"], "sn1" => $note["sn"], "cc2" => 0, "tp2" => 0, "sn2" => 0, "moyenne1" => 0, "moyenne2" => 0, "mention" => ""]);
-                    }else if($note["ue"]["semestre"] == "2"){
-                        array_push($students, ["noms" => $note["etudiant"]["noms"], "matricule" => $note["etudiant"]["matricule"], "code" => $note["ue"]["code"], "cc1" => 0, "tp1" => 0, "sn1" => 0, "cc2" => $note["cc"], "tp2" => $note["tp"], "sn2" => $note["sn"], "moyenne1" => 0, "moyenne2" => 0, "mention" => ""]);
+                    else{
+                        $noteManquant += 1;
                     }
-                }
+
             }
 
-    // Remplir le tableau d'étudiant avec leurs moyennes
-                $studentsCount = count($students);
-                 $i = 0;
-                while( $i < $studentsCount ){
-                   $total1 = 0;
-                   if($students[$i]["sn1"] != null){
-                    $total1 += $students[$i]["sn1"];
-                }
-                 if($students[$i]["cc1"] != null){
-                    $total1 += $students[$i]["cc1"];
-                }
-                 if($students[$i]["tp1"] != null){
-                    $total1 += $students[$i]["tp1"];
-                }
-                   $students[$i]["moyenne1"] = $total1/5;
+            $result = new EtudiantResult(
+                $student->matricule,
+                $semesterOneTotal,
+                $semesterTwoTotal,
+                $nombreEchec,
+                $noteManquant
 
-                   $total2 = 0;
-                   if($students[$i]["sn2"] != null){
-                    $total2 += $students[$i]["sn2"];
-                }
-                 if($students[$i]["cc2"] != null){
-                    $total2 += $students[$i]["cc2"];
-                }
-                 if($students[$i]["tp2"] != null){
-                    $total2 += $students[$i]["tp2"];
-                }
-                   $students[$i]["moyenne2"] = $total2/5;
+            );
+            array_push($classResult,$result);
+        }
 
-
-                   if(($students[$i]["sn1"] == null OR $students[$i]["cc1"] == null OR $students[$i]["tp1"] == null OR $students[$i]["sn2"] == null OR $students[$i]["cc2"] == null OR $students[$i]["tp2"] == null) OR ($total1+$total2) < 70){
-                    $students[$i]["mention"] = "éliminé";
-                   }else{
-                    $students[$i]["mention"] = "retenu";
-                   }
-                   $i++;
-                }
-
-
+//        return $classResult[5]->moyen20;
+        return View::make('pages.importations.calculmoyenne',
+                [
+                'classes' => $classes,
+                'filieres' => $filieres,
+                'lesNotes'=>$classResult,
+                'selected_classe'=>$classe_select
+            ]);
 
     }
+
+
+}
+class EtudiantResult{
+    public $matricule;
+    public $noms;
+    public $sem1Total;
+    public $sem2Total;
+    public $moyenTotal;
+    public $mgp;
+    public $moyen20;
+    public $mention;
+
+    public $id;
+    private static $currentId = 0;
+
+    public $numbreEchec;
+    public $noteManquant;
+
+    function __construct($mat, $sem1, $sem2 ,$echec, $manquant) {
+        $this->matricule = $mat;
+        $this->sem1Total = $sem1;
+        $this->sem2Total = $sem2;
+        $this->numbreEchec = $echec;
+        $this->noteManquant = $manquant;
+
+        $this->id = ++self::$currentId;
+
+        $this->noms = Etudiant::where('matricule',$mat)->first()->noms ?? 'INTROUVABLE';
+        $this->moyenTotal = $sem1 + $sem2;
+        $this->mgp = ($sem1 + $sem2)/60 ;
+        $this->moyen20 = (($sem1 + $sem2)/60) * 5;
+
+        $maMgp = ($sem1 + $sem2)/60;
+        if($maMgp > 2 && $echec < 1 && $manquant < 1){
+            $this->mention = "Admis";
+        }else if($maMgp > 2 && $echec == 1){
+            $this->mention = "Autorisé";
+        }else if ($maMgp < 2){
+            $this->mention = "Reprendre";
+        } else{
+            $this->mention = "----";
+        }
+      }
 }

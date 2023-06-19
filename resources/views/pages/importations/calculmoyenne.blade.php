@@ -79,24 +79,31 @@
                                             <th scope="col">Semestre 2</th>
                                             <th scope="col">Moyenne totale</th>
                                             <th scope="col">MGP</th>
-                                            <th scope="col">Moyenne /20</th>
+                                            <th scope="col">Moyenne/20</th>
                                             <th scope="col">Mention</th>
+                                            <th scope="col">E</th>
+                                            <th scope="col">M</th>
 
                                         </tr>
                                         </thead>
                                         <tbody id="calculmoyenne-result">
-                                            @foreach($selected_classe->etudiants as $etu)
-                                            <tr>
-                                                <td> dd</td>
-                                                <td>{{$etu->matricule}}</td>
-                                                <td>{{$etu->noms}}</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                            @endforeach
+                                            @if(isset($lesNotes))
+                                                @foreach($lesNotes as $note)
+                                                    <tr>
+                                                        <td>{{$note->id}}</td>
+                                                        <td>{{$note->matricule}}</td>
+                                                        <td>{{$note->noms}}</td>
+                                                        <td>{{$note->sem1Total}}</td>
+                                                        <td>{{$note->sem2Total}}</td>
+                                                        <td>{{$note->moyenTotal}}</td>
+                                                        <td>{{$note->mgp}}</td>
+                                                        <td>{{$note->moyen20}}</td>
+                                                        <td>{{$note->mention}}</td>
+                                                        <td>{{$note->numbreEchec}}</td>
+                                                        <td>{{$note->noteManquant}}</td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
