@@ -79,59 +79,31 @@
                                             <th scope="col">Semestre 2</th>
                                             <th scope="col">Moyenne totale</th>
                                             <th scope="col">MGP</th>
-                                            <th scope="col">Moyenne /20</th>
+                                            <th scope="col">Moyenne/20</th>
                                             <th scope="col">Mention</th>
+                                            <th scope="col">E</th>
+                                            <th scope="col">M</th>
 
                                         </tr>
                                         </thead>
                                         <tbody id="calculmoyenne-result">
-                                        @if(isset($selected_classe))
-                                        @foreach($selected_classe->etudiants as $etu)
-                                            <tr>
-                                                <td> dd</td>
-                                                <td>{{$etu->matricule}}</td>
-                                                <td>{{$etu->noms}}</td>
-                                                <td>
-                                                @foreach($etu->classe->ue as $ue)
-                                                    <?php
-                                                        $totalValue =0;
-                                                        if($ue->semestre == 1){
-                                                            $valueTp = $ue->credit * $ue->notes[0]->tp;
-                                                            $valueCc = $ue->credit * $ue->notes[0]->cc;
-                                                            $valueSn = $ue->credit * $ue->notes[0]->sn;
-                                                            $totalValue  = $totalValue + $valueCc + $valueSn + $valueTp;
-                                                            echo $totalValue;
-                                                        }
-                                                    ?>
-                                                     <!-- @foreach($notes as $note)
-                                                        @if($note->ue_id == $ue->id)
-                                                            {{$note->cc}}
-                                                        @endif
-                                                     @endforeach -->
-
+                                            @if(isset($lesNotes))
+                                                @foreach($lesNotes as $note)
+                                                    <tr>
+                                                        <td>{{$note->id}}</td>
+                                                        <td>{{$note->matricule}}</td>
+                                                        <td>{{$note->noms}}</td>
+                                                        <td>{{$note->sem1Total}}</td>
+                                                        <td>{{$note->sem2Total}}</td>
+                                                        <td>{{$note->moyenTotal}}</td>
+                                                        <td>{{$note->mgp}}</td>
+                                                        <td>{{$note->moyen20}}</td>
+                                                        <td>{{$note->mention}}</td>
+                                                        <td>{{$note->numbreEchec}}</td>
+                                                        <td>{{$note->noteManquant}}</td>
+                                                    </tr>
                                                 @endforeach
-
-                                                </td>
-                                                <td>[
-                                                @foreach($etu->classe->ue as $ue)
-                                                    @if($ue->semestre==2)
-                                                    <?php
-                                                        echo"lol";
-                                                    ?>
-                                                    <!-- @foreach($notes as $note)
-                                                        @if($note->ue_id == $ue->id)
-                                                            {{$note->cc}}
-                                                        @endif
-                                                     @endforeach -->
-                                                    @endif
-                                                @endforeach]
-                                                </td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                            @endforeach
-                                        @endif
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>

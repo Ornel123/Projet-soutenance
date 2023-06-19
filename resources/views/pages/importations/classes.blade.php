@@ -111,7 +111,7 @@
                                                 <select class="form-select" required name="filiere">
                                                     <option selected disabled>Choisisez la filiere</option>
                                                     @foreach($filieres as $fil)
-                                                        <option value="{{$fil->code}}">{{$fil->code}}</option>
+                                                        <option value="{{$fil->code}}">{{$fil->intitule}}</option>
                                                     @endforeach
                                                 </select>
                                                 <input class="form-control" type="file" id="formFile" name="classe" required accept=".xlsx,.csv" />
@@ -154,7 +154,7 @@
                                                     <select id="code_filiere" name="code_filiere" class="form-select" required>
                                                         <option disabled>De quelle filière est la classe ?</option>
                                                         @foreach($filieres as $filiere)
-                                                            <option value="{{$filiere->code}}">{{$filiere->code}}</option>
+                                                            <option value="{{$filiere->code}}">{{$filiere->intitule}}</option>
                                                         @endforeach
                                                     </select>
                                                     <div class="invalid-feedback">

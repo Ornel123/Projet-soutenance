@@ -20,7 +20,7 @@ class UE extends Model
 
     public function notes()
     {
-        return $this->hasMany(Note::class);
+        return $this->hasMany(Note::class,"ue_id");
     }
 
     public function classe()
