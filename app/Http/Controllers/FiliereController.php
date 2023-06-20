@@ -134,12 +134,13 @@ class FiliereController extends Controller
     }
     public function add_filiere(Request $request)
     {
+        $filieres = Filiere::query()->paginate();
         if($request->file("filiere")){
             $import = Excel::import(new FiliereImport, $request->file("filiere"));
-            $msg_success = "Data Uploaded Succesfully!";
+
             $msg_danger = "Data Uploaded failed! ";
             if ($import) {
-                return $msg_success;
+                return View::make('pages.importations.filieres', ['filieres' => $filieres]);
             }else{
                return $msg_danger;
             }

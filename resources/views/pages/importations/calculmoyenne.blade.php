@@ -51,13 +51,13 @@
                                         <h5>Critere de deliberation (Optionelle)</h5>
                                         <div>
                                             <label for="mgpMin">MGP Minimum</label>
-                                            <input type="number" id="mgpMin" name="mgpMin" class="form-control" min="0" max="4" step="0.1" value="{{$mgpMinimum}}">
+                                            <input type="number" id="mgpMin" name="mgpMin" class="form-control" min="0" max="4" step="0.1" value="{{$mgpMinimum ?? 1.5}}">
 
                                             <!-- <label for="mgpMax">MGP Maximum</label>
                                             <input type="number" id="mgpMax" name="mgpMax" class="form-control" min="0" max="4"> -->
 
                                             <label for="echecNum">Nombre Dechec maximum</label>
-                                            <input type="number" id="echecNum" name="echecNum" class="form-control" min="0" max="4" value="{{$echecMax}}">
+                                            <input type="number" id="echecNum" name="echecNum" class="form-control" min="0" max="4" value="{{$echecMax ?? 2}}">
                                         </div>
                                     </div>
                                     <div class="d-grid gap-2 mt-3 col-sm-12">

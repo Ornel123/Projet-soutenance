@@ -145,10 +145,20 @@ class ClasseController extends Controller
         $niveau = Niveau::where('code',$request->niveau)->first();
         if($request->file("classe")){
             $import = Excel::import(new ClasseImport($filiere->id,$niveau->id), $request->file("classe"));
-            $msg_success = "Data Uploaded Succesfully!";
             $msg_danger = "Data Uploaded failed! ";
             if ($import) {
-                return $msg_success;
+                    $filieres = Filiere::all();
+                    $niveaux = Niveau::all();
+                    $classes = Classe::query()->paginate();
+                    foreach($classes as $classe){
+                        $classe->filiere = $classe->filiere()->first();
+                        $classe->niveau = $classe->niveau()->first();
+                    }
+                    return View::make('pages.importations.classes', [
+                        'filieres' => $filieres,
+                        'niveaux' => $niveaux,
+                        'classes' => $classes
+                    ]);
             }else{
                return $msg_danger;
             }
