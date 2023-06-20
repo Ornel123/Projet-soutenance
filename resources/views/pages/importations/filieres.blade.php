@@ -58,6 +58,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    {{$filieres->links()}}
                                 </div>
                             </div>
 

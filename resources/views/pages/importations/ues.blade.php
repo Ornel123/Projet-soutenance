@@ -75,6 +75,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    {{$ues->links()}}
                                 </div>
                             </div>
 

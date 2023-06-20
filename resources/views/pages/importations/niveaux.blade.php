@@ -51,6 +51,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    {{$niveaux->links()}}
                                 </div>
                             </div>
 

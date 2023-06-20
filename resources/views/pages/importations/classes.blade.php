@@ -67,6 +67,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    {{$classes->links()}}
                                 </div>
                             </div>
 

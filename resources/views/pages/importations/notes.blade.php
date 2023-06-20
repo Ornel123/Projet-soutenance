@@ -58,7 +58,7 @@
                                 </div>
                             </div>
                             <div class="pagination">
-                                {!! $notes->links() !!}
+                                {{ $notes->links()}}
 
                                 </div>
                         </div>
