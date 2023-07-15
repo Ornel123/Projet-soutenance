@@ -106,22 +106,17 @@ class NiveauController extends Controller
      * @param  \App\Models\Niveau  $niveau
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete_niv($id)
     {
         $searched_level = Niveau::findOrFail($id);
         $searched_level->delete();
 
-        return Response(json_encode([
-            'message' => 'Le niveau a été supprimé avec succès !'
-        ]));
+        return redirect()->route('niveaux');
     }
 
     public function view_index()
     {
         $niveaux = Niveau::query()->paginate();
-        // foreach($niveaux as $niveau){
-        //     $niveau->nombre_classes = $niveau->classes()->count();
-        // }
         return View::make('pages.importations.niveaux', ['niveaux' => $niveaux]);
     }
 
@@ -138,5 +133,15 @@ class NiveauController extends Controller
         }else{
             return dump($request->allFiles());
         }
+    }
+
+    public function add_niveau_form(Request $request){
+        $niv = new Niveau();
+        $niv->code = $request->code;
+        $niv->intitule = $request->intitule;
+        $niv->save();
+
+        return redirect()->route('niveaux');
+
     }
 }

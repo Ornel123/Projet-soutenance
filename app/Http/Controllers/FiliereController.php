@@ -132,6 +132,24 @@ class FiliereController extends Controller
         // }
         return View::make('pages.importations.filieres', ['filieres' => $filieres]);
     }
+    public function add_filiere_form(Request $request)
+    {
+        $fil = new Filiere();
+        $fil->code = $request->code;
+        $fil->intitule = $request->intitule;
+        $fil->save();
+
+        return redirect()->route('filieres');
+        // return $request->intitule;
+    }
+
+    public function delete_filiere($id)
+    {
+        $searched_fil = Filiere::findOrFail($id);
+        $searched_fil->delete();
+
+        return redirect()->route('filieres');
+    }
     public function add_filiere(Request $request)
     {
         $filieres = Filiere::query()->paginate();

@@ -7,7 +7,7 @@
 @section('content')
 
 <div class="pagetitle">
-        
+
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Accueil</a></li>
@@ -16,7 +16,7 @@
             </ol>
         </nav>
     </div><!-- End Page Title -->
- 
+
 
 
 
@@ -35,7 +35,7 @@
                             <div class="col-sm-8">
                                 <label for="classe">Filliere</label>
                                 <select id="filiere" name="filiere" class="form-select" required>
-                                        
+
                                     @foreach ($filieres as $filiere)
                                          <option value="{{ $filiere->id }}>">{{ $filiere->code }}</option>
                                     @endforeach
@@ -44,14 +44,14 @@
                                Ce champ est requis !
                             </div>
                             </div><br>
-                           
+
                            <div class="col-sm-8">
                                <label for="classe">Classe</label>
                                <select id="classe" name="classe" class="form-select" required></select>
                            <div class="invalid-feedback">
                               Ce champ est requis !
                            </div>
-                           </div><br> 
+                           </div><br>
 
                             <div class="d-grid gap-2 mt-3">
                                     <button id="import-button" onclick="CalculMoyenne()" class="btn btn-primary" type="button">Calculer</button>
@@ -75,18 +75,18 @@
                                             <th scope="col">MGP</th>
                                             <th scope="col">Moyenne /20</th>
                                             <th scope="col">Mention</th>
-                                         
+
                                         </tr>
                                         </thead>
                                         <tbody id="calculmoyenne-result">
 
                                         </tbody>
                                     </table>
-                                </div> 
-                               
+                                </div>
+
                     </div>
 
-            
+
 
 
 
@@ -97,7 +97,4 @@
 @section('customs-scripts')
     <script src="{{ asset('assets/js/share.js') }}"></script>
     <script src="{{ asset('assets/js/importations/CalculeMoyenne.js') }}"></script>
-    <script>
-        allClasses = {!! json_encode($classes) !!};
-    </script>
 @endsection

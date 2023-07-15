@@ -107,9 +107,7 @@ class EtudiantController extends Controller
         $searched_etd = Etudiant::findOrFail($id);
         $searched_etd->delete();
 
-        return Response(json_encode([
-            'message' => 'L\'étudiant a été supprimé avec succès !'
-        ]));
+        return redirect()->route('etudiants');
     }
 
     public function view_index()

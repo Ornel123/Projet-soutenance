@@ -126,9 +126,7 @@ class UEController extends Controller
         $searched_ue = UE::findOrFail($id);
         $searched_ue->delete();
 
-        return Response(json_encode([
-            'message' => 'L\'UE a été supprimée avec succès !'
-        ]));
+        return redirect()->route('ues');
     }
 
     public function view_index()

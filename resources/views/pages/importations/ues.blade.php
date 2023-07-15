@@ -67,9 +67,12 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                        <button class="btn btn-outline-danger">
-                                                        <i class="bi bi-trash"></i>
-                                                        </button>
+                                                <form action="{{route('ue_delete',$ue->id)}}" method="post">
+                                                            @CSRF
+                                                            <button class="btn btn-outline-danger">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </form>
                                                     </td>
                                             </tr>
                                             @endforeach
@@ -155,7 +158,7 @@
                                                 <label for="code_classe" class="col-sm-2 col-form-label">Classe: <span class="text-danger ql-size-huge">*</span></label>
                                                 <div class="col-sm-10">
                                                     <select id="code_classe" name="code_classe" class="form-select" required>
-                                                        <option selected="">De quelle classe est l'ue ?</option>
+                                                        <option disabled>De quelle classe est l'ue ?</option>
                                                         @foreach($classes as $classe)
                                                             <option value="{{$classe->code}}">{{$classe->code}}</option>
                                                         @endforeach
@@ -171,7 +174,7 @@
                                                         <label for="semestre" class="col-sm-4 col-form-label">Semestre: <span class="text-danger ql-size-huge">*</span></label>
                                                         <div class="col-sm-8">
                                                             <select id="semestre" name="semestre" class="form-select" required>
-                                                                    <option hidden disabled selected="">De quel semestre est l'UE ?</option>
+                                                                    <option disabled>De quel semestre est l'UE ?</option>
                                                                 <option value="1">1</option>
                                                                 <option value="2">2</option>
                                                             </select>
@@ -199,7 +202,7 @@
                                                         <label for="tp_optionel" class="col-sm-4 col-form-label">TP requis: <span class="text-danger ql-size-huge">*</span></label>
                                                         <div class="col-sm-8">
                                                             <select id="tp_optionel" name="tp_optionel" class="form-select" required>
-                                                                <option hidden disabled selected="">L'UE possède-t-elle un TP</option>
+                                                                <option disabled>L'UE possède-t-elle un TP</option>
                                                                 <option value="false">Oui</option>
                                                                 <option value="true">Non</option>
                                                             </select>
@@ -214,7 +217,7 @@
                                                         <label for="ue_optionelle" class="col-sm-4 col-form-label">Option: <span class="text-danger ql-size-huge">*</span></label>
                                                         <div class="col-sm-8">
                                                             <select id="ue_optionelle" name="ue_optionelle" class="form-select" required>
-                                                                <option hidden disabled selected="">L'UE est-elle optionnelle</option>
+                                                                <option disabled>L'UE est-elle optionnelle</option>
                                                                 <option value="true">Oui</option>
                                                                 <option value="false">Non</option>
                                                             </select>

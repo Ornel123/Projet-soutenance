@@ -119,9 +119,7 @@ class ClasseController extends Controller
         $searched_class = Classe::findOrFail($id);
         $searched_class->delete();
 
-        return Response(json_encode([
-            'message' => 'La classe a été supprimée avec succès !'
-        ]));
+        return redirect()->route('classes.all');
     }
 
     public function view_index()
@@ -181,7 +179,6 @@ class ClasseController extends Controller
             $classe->niveau_id = $niveau->id;
 
             if($classe->save()){
-                $request->flash("success","Document enregistre avec success");
                 return redirect()->route('classes.all');
 
             }

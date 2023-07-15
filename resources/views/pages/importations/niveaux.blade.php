@@ -43,9 +43,12 @@
                                                     <td>{{$niv->code}}</td>
                                                     <td>{{$niv->intitule}}</td>
                                                     <td>
-                                                        <button class="btn btn-outline-danger">
-                                                        <i class="bi bi-trash"></i>
-                                                        </button>
+                                                        <form action="{{route('niveaux_delete',$niv->id)}}" method="post">
+                                                            @CSRF
+                                                            <button class="btn btn-outline-danger">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -100,7 +103,8 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade mt-3" id="bordered-justified-profile" role="tabpanel" aria-labelledby="import-by-form-tab">
-                                    <form onsubmit="return false" class="row d-flex justify-content-center needs-validation" id="level-form" novalidate>
+                                    <form method="POST" action="{{route('niveaux_add_form')}}" class="row d-flex justify-content-center needs-validation" id="level-form" >
+                                        @CSRF
                                         <div class="col-md-7">
                                             <div class="row mb-3">
                                                 <label for="code" class="col-sm-2 col-form-label">Code: <span class="text-danger ql-size-huge">*</span></label>
@@ -122,7 +126,7 @@
                                             </div>
 
                                             <div class="d-flex justify-content-center">
-                                                <button onclick="submitLevelForm()" type="submit" class="btn btn-outline-primary">Ajouter</button>
+                                                <button type="submit" class="btn btn-outline-primary">Ajouter</button>
                                             </div>
                                         </div>
                                     </form>

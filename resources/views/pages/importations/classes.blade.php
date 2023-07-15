@@ -59,9 +59,12 @@
                                                     <td>{{$class->filiere->intitule}}</td>
                                                     <td>{{$class->niveau->intitule}}</td>
                                                     <td>
-                                                    <button class="btn btn-outline-danger">
-                                                        <i class="bi bi-trash"></i>
-                                                        </button>
+                                                    <form action="{{route('classe_delete',$class->id)}}" method="post">
+                                                            @CSRF
+                                                            <button class="btn btn-outline-danger">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             @endforeach

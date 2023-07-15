@@ -49,7 +49,14 @@
                                             <td>{{$note->cc}}</td>
                                             <td>{{$note->tp}}</td>
                                             <td>{{$note->sn}}</td>
-                                            <td></td>
+                                            <td>
+                                            <form action="{{route('notes_delete',$note->id)}}" method="post">
+                                                            @CSRF
+                                                            <button class="btn btn-outline-danger">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </form>
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -112,7 +119,8 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade mt-3" id="bordered-justified-profile" role="tabpanel" aria-labelledby="import-by-form-tab">
-                                <form class="row d-flex justify-content-center needs-validation" id="note-form" novalidate>
+                                <form method="post" action="{{route('notes_form_add')}}" class="row d-flex justify-content-center needs-validation" id="note-form">
+                                    @CSRF
                                         <div class="col-md-7">
                                             <div class="mb-3">
                                                 <div class="form-check form-check-inline">
@@ -157,7 +165,7 @@
                                             <div class="row mb-3">
                                                 <label for="note" class="col-sm-2 col-form-label">Note: <span class="text-danger ql-size-huge">*</span></label>
                                                 <div class="col-sm-10">
-                                                    <input required min="-1" max="20" value="-1" id="note" name="note" type="number" class="form-control" placeholder="Note de l'étudiant">
+                                                    <input required min="0" max="20" value="0" id="note" name="note" type="number" class="form-control" placeholder="Note de l'étudiant">
                                                     <div class="invalid-feedback">
                                                         La note est requise !
                                                     </div>
@@ -165,7 +173,7 @@
                                             </div>
 
                                             <div class="d-flex justify-content-center">
-                                                <button onclick="submitNoteForm()" type="submit" class="btn btn-outline-primary">Ajouter</button>
+                                                <button type="submit" class="btn btn-outline-primary">Ajouter</button>
                                             </div>
                                         </div>
                                     </form>

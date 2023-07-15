@@ -123,9 +123,7 @@ class NoteController extends Controller
         $searched_note = Note::findOrFail($id);
         $searched_note->delete();
 
-        return Response(json_encode([
-            'message' => 'La note a été supprimée avec succès !'
-        ]));
+        return redirect()->route('notes');
     }
 
     public function view_index()
@@ -151,5 +149,8 @@ class NoteController extends Controller
 
             return redirect()->route('notes');
         }
+    }
+    public function add_notes_form(Request $request){
+        return redirect()->route('notes');
     }
 }

@@ -51,9 +51,12 @@
                                                 <td>{{$etud->date_naissance}}</td>
                                                 <td>{{$etud->classe->intitule}}</td>
                                                 <td>
-                                                <button class="btn btn-outline-danger">
-                                                        <i class="bi bi-trash"></i>
-                                                        </button>
+                                                    <form action="{{route('etudiant_delete',$etud->id)}}" method="post">
+                                                                @CSRF
+                                                                <button class="btn btn-outline-danger">
+                                                                    <i class="bi bi-trash"></i>
+                                                                </button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                             @endforeach

@@ -50,9 +50,12 @@
                                                         ]
                                                     </td>
                                                     <td>
-                                                        <button class="btn btn-outline-danger">
-                                                        <i class="bi bi-trash"></i>
-                                                        </button>
+                                                    <form action="{{route('filieres_delete',$fil->id)}}" method="post">
+                                                            @CSRF
+                                                            <button class="btn btn-outline-danger">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -107,12 +110,13 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade mt-3" id="bordered-justified-profile" role="tabpanel" aria-labelledby="import-by-form-tab">
-                                    <form onsubmit="return false" class="row d-flex justify-content-center needs-validation" id="classe-form" novalidate>
+                                    <form method="post" action="{{route('filieres_add_form')}}" class="row d-flex justify-content-center needs-validation" id="classe-form">
+                                        @CSRF
                                         <div class="col-md-7">
                                             <div class="row mb-3">
                                                 <label for="code" class="col-sm-2 col-form-label">Code: <span class="text-danger ql-size-huge">*</span></label>
                                                 <div class="col-sm-10">
-                                                    <input required minlength="2" maxlength="15" id="code" name="code" type="text" class="form-control" placeholder="Code de la classe">
+                                                    <input required minlength="2" maxlength="15" id="code" name="code" type="text" class="form-control" placeholder="Code de la filiere">
                                                     <div class="invalid-feedback">
                                                         Le code est requis et doit comprendre entre 2 et 15 caractères !
                                                     </div>
@@ -121,39 +125,14 @@
                                             <div class="row mb-3">
                                                 <label for="code" class="col-sm-2 col-form-label">Intitulé: <span class="text-danger ql-size-huge">*</span></label>
                                                 <div class="col-sm-10">
-                                                    <input required minlength="3" maxlength="60" id="intitule" name="intitule" type="text" class="form-control" placeholder="Intitulé de la classe">
+                                                    <input required minlength="3" maxlength="60" id="intitule" name="intitule" type="text" class="form-control" placeholder="Intitulé de la filiere">
                                                     <div class="invalid-feedback">
                                                         L'intitulé est requis et doit comprendre entre 3 et 60 caractères !
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row mb-3">
-                                                <label for="code" class="col-sm-2 col-form-label">Filière: <span class="text-danger ql-size-huge">*</span></label>
-                                                <div class="col-sm-10">
-                                                    <select id="code_filiere" name="code_filiere" class="form-select" required>
-                                                        <option hidden disabled selected="">De quelle filière est la classe ?</option>
-
-                                                    </select>
-                                                    <div class="invalid-feedback">
-                                                        La filière est requise !
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <label for="code" class="col-sm-2 col-form-label">Niveau: <span class="text-danger ql-size-huge">*</span></label>
-                                                <div class="col-sm-10">
-                                                    <select id="code_niveau" name="code_niveau" class="form-select" required>
-                                                        <option hidden disabled selected="">De quel niveau est la classe ?</option>
-
-                                                    </select>
-                                                    <div class="invalid-feedback">
-                                                        Le niveau est requise !
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                             <div class="d-flex justify-content-center">
-                                                <button onclick="submitClasseForm()" type="submit" class="btn btn-outline-primary">Ajouter</button>
+                                                <button type="submit" class="btn btn-outline-primary">Ajouter</button>
                                             </div>
                                         </div>
                                     </form>
