@@ -25,7 +25,7 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Unités d'Enseignement</h5>
+                            <h5 class="card-title">Les Etudiants</h5>
                      <div class="col-md-12">
 
                             <div class="row">

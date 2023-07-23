@@ -10,6 +10,7 @@ use App\Models\Filiere;
 use App\Models\Niveau;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Maatwebsite\Excel\Facades\Excel;
@@ -117,6 +118,12 @@ class ClasseController extends Controller
     public function destroy($id)
     {
         $searched_class = Classe::findOrFail($id);
+
+        if(count($searched_class->ue) > 0 || count($searched_class->etudiants) >0 ){
+            return Redirect::back()->withErrors(["Cette classe est lie a des UE et des Etudiants !"]);
+        }
+
+        return $searched_class->ue;
         $searched_class->delete();
 
         return redirect()->route('classes.all');
