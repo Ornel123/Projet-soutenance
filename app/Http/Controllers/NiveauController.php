@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\NiveauImport;
+use Illuminate\Support\Facades\Redirect;
 
 class NiveauController extends Controller
 {
@@ -109,6 +110,11 @@ class NiveauController extends Controller
     public function delete_niv($id)
     {
         $searched_level = Niveau::findOrFail($id);
+
+        if(count($searched_level->classes) > 0){
+            return Redirect::back()->withErrors(["Ce Niveau est Lie a un ou plusiers classe!"]);
+        }
+
         $searched_level->delete();
 
         return redirect()->route('niveaux');
