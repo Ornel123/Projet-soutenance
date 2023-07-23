@@ -6,18 +6,6 @@
 
 @section('content')
 
-     @if(session('success'))
-     <div class="alert alert-success" role="alert">
-        <p>{{session('success')}}</p>
-    </div>
-    @elseif(session('erreur'))
-            <div class="alert alert-danger">
-                <p>{{session('erreur')}}</p>
-            </div>
-    @endif
-    <div class="alert alert-success" role="alert">
-        <p>{{session('success')}}</p>
-    </div>
     <div class="pagetitle">
         <h1>Classes</h1>
         <nav>

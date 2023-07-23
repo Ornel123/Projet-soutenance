@@ -114,7 +114,6 @@ class FiliereController extends Controller
     {
         $searched_sector = Filiere::findOrFail($id);
         $searched_sector->delete();
-
         return Response(json_encode([
             'message' => 'La filière a été supprimée avec succès !'
         ]));
@@ -146,9 +145,14 @@ class FiliereController extends Controller
     public function delete_filiere($id)
     {
         $searched_fil = Filiere::findOrFail($id);
+
+        if(count($searched_fil->classes) > 0){
+            return Redirect::back()->withErrors(["Cette filiere a un ou plusier classe deja attribue !"]);
+        }
+
         $searched_fil->delete();
 
-        return redirect()->route('filieres');
+        return redirect()->route('filieres')->withSuccess("Supprimer avec success");
     }
     public function add_filiere(Request $request)
     {
