@@ -10,6 +10,8 @@ use App\Imports\NoteImport;
 use App\Models\UE;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Maatwebsite\Excel\Facades\Excel;
@@ -84,9 +86,19 @@ class NoteController extends Controller
      * @param  \App\Models\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function show(Note $note)
+    public function show($id)
     {
-        //
+        $theNote = Note::find($id);
+
+        if($theNote == null){
+            return Redirect::route('notes')->withErrors(["Cette Note N'existe pas !"]);
+        }
+        if(Auth::user()->role != "Admin" && $theNote->ue->prof_id != Auth::user()->id ){
+            return Redirect::route('notes')->withErrors(["Vous N'etes pas autoriser !"]);
+        }
+
+        return view('pages.importations.singleNote')
+            ->with('note',$theNote);
     }
 
     /**
@@ -100,16 +112,17 @@ class NoteController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateNoteRequest  $request
-     * @param  \App\Models\Note  $note
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateNoteRequest $request, Note $note)
+    public function update_note(Request $request,$id)
     {
-        //
+        $theNote = Note::find($id);
+
+
+        $theNote->cc =$request->notecc;
+        $theNote->tp =$request->notetp;
+        $theNote->sn =$request->notesn;
+
+        $theNote->save();
+        return Redirect::back()->withSuccess("Note Modifier avec succes !");
     }
 
     /**
@@ -129,14 +142,22 @@ class NoteController extends Controller
     public function view_index()
     {
         $ues = UE::all();
-        $notes = Note::query()->paginate();
+        $theUe = UE::where('id',Auth::user()->ue_id)->first();
+        if(Auth::user()->role == "Admin"){
+            $notes = Note::query()->paginate();
+        }else if (Auth::user()->role == "Enseignant"){
+            $notes = Note::where('ue_id',$theUe->id)->paginate();
+        }
+
         foreach($notes as $note){
             $note->etudiant = $note->etudiant()->first();
             $note->ue = $note->ue()->first();
         }
+        $profUe = UE::where('id',Auth::user()->ue_id)->first();
         return View::make('pages.importations.notes', [
             'notes' => $notes,
-            'ues' => $ues
+            'ues' => $ues,
+            'theUe' => $profUe
         ]);
     }
 
@@ -151,6 +172,22 @@ class NoteController extends Controller
         }
     }
     public function add_notes_form(Request $request){
-        return redirect()->route('notes');
+        $note = new Note();
+        $etudiant = Etudiant::where('matricule',$request->matricule_etudiant)->first();
+
+        if(!$etudiant){
+            return Redirect::back()->withErrors(["Cette etudiant N'existe pas !"]);
+        }
+        $ue = UE::where('code',$request->ueCode)->first();
+
+        $note->etudiant_id =$etudiant->id;
+        $note->cc =$request->notecc;
+        $note->tp =$request->notetp;
+        $note->sn =$request->notesn;
+        $note->ue_id =$ue->id;
+        $note->annee_scolaire ="2020/2021";
+
+        $note->save();
+        return Redirect::back()->withSuccess("Note Enregistrer avec succes !");
     }
 }

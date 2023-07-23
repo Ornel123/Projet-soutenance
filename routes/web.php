@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\FiliereController;
@@ -23,10 +24,11 @@ use Illuminate\Support\Facades\View;
 
 Route::get('/', function () {
     return View::make('pages.home');
-})->name('home');
+})->name('home')->middleware('auth');
 
 Route::group([
-       'prefix' => 'importations'
+       'prefix' => 'importations',
+       'middleware' => 'auth'
     ], function($router){
 
     Route::group([
@@ -73,6 +75,8 @@ Route::group([
         'prefix' => 'notes'
     ], function($router){
         Route::get('/', [NoteController::class, 'view_index'])->name('notes');
+        Route::get('/{noteId}', [NoteController::class, 'show'])->name('notes_edit');
+        Route::put('/{noteId}', [NoteController::class, 'update_note']);
         Route::post('/', [NoteController::class, 'add_notes'])->name('notes_add');
         Route::post('/form',[NoteController::class, 'add_notes_form'])->name('notes_form_add');
         Route::post('/delete/{noteId}', [NoteController::class, 'destroy'])->name('notes_delete');
@@ -90,6 +94,10 @@ Route::group([
     });
 });
 
+Route::get('admin/admincreate', [AdminController::class, 'newAdmin'])->name('admin.admincreate');
+Route::get('admin/profcreate', [AdminController::class, 'newProf'])->name('admin.profcreate');
+Route::post('admin/admincreate', [AdminController::class, 'newAdminForm']);
+Route::post('admin/profcreate', [AdminController::class, 'newProfForm']);
 
 
 

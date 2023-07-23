@@ -22,8 +22,11 @@
                 <div id="import-container">
                 <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Les differents notes</h5>
-
+                        @if(Auth()->user()->role == "Enseignant")
+                        <h5 class="card-title">Les differents notes de <b>{{$theUe->code}}</b></h5>
+                                @else
+                                <h5 class="card-title">Les differents notes</h5>
+                                @endif
                             <div class="row">
                                 <div class="col-md-12">
                                 <table class="table table-bordered">
@@ -49,13 +52,19 @@
                                             <td>{{$note->cc}}</td>
                                             <td>{{$note->tp}}</td>
                                             <td>{{$note->sn}}</td>
-                                            <td>
-                                            <form action="{{route('notes_delete',$note->id)}}" method="post">
-                                                            @CSRF
-                                                            <button class="btn btn-outline-danger">
-                                                                <i class="bi bi-trash"></i>
-                                                            </button>
-                                                        </form>
+                                            <td style="display:flex;justify-content:space-around;">
+                                                <form action="{{route('notes_delete',$note->id)}}" method="post">
+                                                                @CSRF
+                                                                <button class="btn btn-outline-danger">
+                                                                    <i class="bi bi-trash"></i>
+                                                                </button>
+                                                </form>
+                                                <a href="{{route('notes_edit',$note->id)}}">
+                                                <button class="btn btn-outline-info">
+
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                </a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -70,13 +79,31 @@
                                 </div>
                         </div>
                     </div>
+                    @if(Session::has('success'))
+    <div class="alert alert-success">
+        {{Session::get('success')}}
+    </div>
+    @endif
+    @if($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title" style="position: relative;">
                                 <button onclick="showSummaryContainer()" style="position: absolute; right: 0;" class="btn btn-outline-danger btn-sm">
                                     <i class="bi bi-arrow-left-square"></i>
                                 </button>
-                                Ajouter des notes
+                                @if(Auth()->user()->role == "Enseignant")
+                                    Ajouter des notes de <b>{{$theUe->code}}</b>
+                                @else
+                                    Les Notes
+                                @endif
                             </h5>
 
                             <!-- Bordered Tabs Justified -->
@@ -100,12 +127,22 @@
                                             flex-direction:column;
                                             gap:10px;">
                                                 @CSRF
-                                                <select id="code_ue" name="ueCode" class="form-select" required>
+                                                <div class="col-sm-12">
+                                                    @if(Auth()->user()->role == "Admin")
+                                                <select id="ueCode" name="ueCode" class="form-select" required>
                                                     <option disabled selected hidden value="">De quelle UE est la note ?</option>
                                                     @foreach($ues as $ue)
-                                                        <option value="{{$ue->code}}">{{$ue->intitule}}</option>
+                                                        <option value="{{$ue->code}}">{{$ue->code}}</option>
                                                     @endforeach
                                                 </select>
+                                                    <div class="invalid-feedback">
+                                                    L'UE est requise !
+                                                    </div>
+                                                    @else
+                                                    <input type="text" name="ueCode" value="{{$theUe->code}}" readonly class="form-control">
+                                                    @endif
+
+                                                </div>
                                                 <input class="form-control" type="file" id="formFile" name="notes" required accept=".xlsx,.csv" />
                                                 <button class="btn btn-success browse-button" id="browse-button">Ajouter</button>
                                             </form>
@@ -121,27 +158,11 @@
                                 <div class="tab-pane fade mt-3" id="bordered-justified-profile" role="tabpanel" aria-labelledby="import-by-form-tab">
                                 <form method="post" action="{{route('notes_form_add')}}" class="row d-flex justify-content-center needs-validation" id="note-form">
                                     @CSRF
-                                        <div class="col-md-7">
-                                            <div class="mb-3">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="checkbox" name="cc" id="inlineCheckbox1" value="cc">
-                                                    <label class="form-check-label" for="inlineCheckbox1">CC</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="checkbox" name="sn" id="inlineCheckbox2" value="sn">
-                                                    <label class="form-check-label" for="inlineCheckbox2">SN</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" name="tp" type="checkbox" id="inlineCheckbox2" value="tp">
-                                                    <label class="form-check-label" for="inlineCheckbox2">TP</label>
-                                                </div>
-                                            </div>
-                                            </div>
-
                                         <div class="row mb-3">
                                                 <label for="matricule_etudiant" class="col-sm-2 col-form-label">UE: <span class="text-danger ql-size-huge">*</span></label>
                                                 <div class="col-sm-10">
-                                                <select id="code_ue" name="code_ue" class="form-select" required>
+                                                    @if(Auth()->user()->role == "Admin")
+                                                <select id="ueCode" name="ueCode" class="form-select" required>
                                                     <option disabled selected hidden value="">De quelle UE est la note ?</option>
                                                     @foreach($ues as $ue)
                                                         <option value="{{$ue->code}}">{{$ue->code}}</option>
@@ -150,6 +171,10 @@
                                                     <div class="invalid-feedback">
                                                     L'UE est requise !
                                                     </div>
+                                                    @else
+                                                    <input type="text" name="ueCode" value="{{$theUe->code}}" readonly class="form-control">
+                                                    @endif
+
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
@@ -163,12 +188,21 @@
                                             </div>
 
                                             <div class="row mb-3">
-                                                <label for="note" class="col-sm-2 col-form-label">Note: <span class="text-danger ql-size-huge">*</span></label>
+                                                <label for="note" class="col-sm-2 col-form-label">Note CC: <span class="text-danger ql-size-huge">*</span></label>
                                                 <div class="col-sm-10">
-                                                    <input required min="0" max="20" value="0" id="note" name="note" type="number" class="form-control" placeholder="Note de l'étudiant">
-                                                    <div class="invalid-feedback">
-                                                        La note est requise !
-                                                    </div>
+                                                    <input required min="0" max="20" id="note" name="notecc" type="number" class="form-control" placeholder="Note de l'étudiant">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label for="note" class="col-sm-2 col-form-label">Note TP: <span class="text-danger ql-size-huge">*</span></label>
+                                                <div class="col-sm-10">
+                                                    <input min="0" max="40" id="notetp" name="notetp" type="number" class="form-control" placeholder="Note de l'étudiant">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label for="note" class="col-sm-2 col-form-label">Note SN: <span class="text-danger ql-size-huge">*</span></label>
+                                                <div class="col-sm-10">
+                                                    <input min="0" max="40" id="notesn" name="notesn" type="number" class="form-control" placeholder="Note de l'étudiant">
                                                 </div>
                                             </div>
 

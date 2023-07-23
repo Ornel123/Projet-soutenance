@@ -27,7 +27,7 @@
                                 <button onclick="showSummaryContainer()" style="position: absolute; right: 0;" class="btn btn-outline-danger btn-sm">
                                     <i class="bi bi-arrow-left-square"></i>
                                 </button>
-                                Calcul des Moyennes
+                                Calcul des Moyennes Et deliberation
                             </h5>
 
                             <!-- Bordered Tabs Justified -->
@@ -48,7 +48,7 @@
                                     </div>
 
                                     <div class="col-sm-6 float-right">
-                                        <h5>Critere de deliberation (Optionelle)</h5>
+                                        <!-- <h5>Critere de deliberation (Optionelle)</h5> -->
                                         <div>
                                             <label for="mgpMin">MGP Minimum</label>
                                             <input type="number" id="mgpMin" name="mgpMin" class="form-control" min="0" max="4" step="0.1" value="{{$mgpMinimum ?? 1.5}}">
@@ -61,7 +61,7 @@
                                         </div>
                                     </div>
                                     <div class="d-grid gap-2 mt-3 col-sm-12">
-                                            <button id="import-button" class="btn btn-primary" type="submit">Calculer</button>
+                                            <button id="import-button" class="btn btn-primary" type="submit">Deliberer</button>
                                         </div>
                                 </form>
                                 </div>
@@ -149,7 +149,7 @@
                                                         <td>{{$note->sem1Total}}</td>
                                                         <td>{{$note->sem2Total}}</td>
                                                         <td>{{$note->moyenTotal}}</td>
-                                                        <td>{{number_format($note->mgp, 1)}}</td>
+                                                        <td>2.0</td>
                                                         <td>{{number_format($note->moyen20, 1)}}</td>
                                                         <td>{{$note->mention}}</td>
                                                         <td>{{$note->numbreEchec}}</td>

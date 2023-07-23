@@ -19,9 +19,10 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'email' => 'leticia123@gmail.com',
+            'role'=>'Admin',
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => '$2y$10$fT1zvo9jZv8WsUK/X1c5/.8Cm7z7L.R.jTEin6SsQGdkUJ7ibGE5C', // password
             'remember_token' => Str::random(10),
         ];
     }

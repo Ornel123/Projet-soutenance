@@ -27,6 +27,8 @@ return new class extends Migration
 
             $table->foreign("classe_id")->references("id")->on("classes");
 
+            $table->integer("prof_id")->default(0);
+
         });
     }
 
