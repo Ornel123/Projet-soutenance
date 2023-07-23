@@ -123,7 +123,6 @@ class ClasseController extends Controller
             return Redirect::back()->withErrors(["Cette classe est lie a des UE et des Etudiants !"]);
         }
 
-        return $searched_class->ue;
         $searched_class->delete();
 
         return redirect()->route('classes.all');
