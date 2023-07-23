@@ -11,7 +11,7 @@ use App\Imports\UeImport;
 
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Maatwebsite\Excel\Facades\Excel;
@@ -124,6 +124,10 @@ class UEController extends Controller
     public function destroy($id)
     {
         $searched_ue = UE::findOrFail($id);
+        if(count($searched_ue->notes) > 0){
+            return Redirect::back()->withErrors(["Cette UE posses les notes !"]);
+        }
+
         $searched_ue->delete();
 
         return redirect()->route('ues');
