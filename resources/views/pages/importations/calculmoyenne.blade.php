@@ -27,7 +27,7 @@
                                 <button onclick="showSummaryContainer()" style="position: absolute; right: 0;" class="btn btn-outline-danger btn-sm">
                                     <i class="bi bi-arrow-left-square"></i>
                                 </button>
-                                Calcul des Moyennes Et deliberation
+                                Calcul des Moyennes
                             </h5>
 
                             <!-- Bordered Tabs Justified -->
@@ -48,7 +48,6 @@
                                     </div>
 
                                     <div class="col-sm-6 float-right">
-                                        <!-- <h5>Critere de deliberation (Optionelle)</h5> -->
                                         <div>
                                             <label for="mgpMin">MGP Minimum</label>
                                             <input type="number" id="mgpMin" name="mgpMin" class="form-control" min="0" max="4" step="0.1" value="{{$mgpMinimum ?? 1.5}}">
