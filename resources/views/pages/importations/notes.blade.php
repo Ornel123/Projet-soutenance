@@ -22,12 +22,9 @@
                 <div id="import-container">
                 <div class="card">
                         <div class="card-body">
-                        @if(Auth()->user()->role == "Enseignant")
-                        <h5 class="card-title">Les differents notes de <b>{{$theUe->code}}</b></h5>
-                                @else
-                                <h5 class="card-title">Les differents notes</h5>
-                                @endif
-                            <div class="row">
+                                @if(Auth()->user()->role == "Enseignant")
+                                    <h5 class="card-title">Les differents notes de <b>{{$theUe->code}}</b></h5>
+                                    <div class="row">
                                 <div class="col-md-12">
                                 <table class="table table-bordered">
                                     <thead>
@@ -73,9 +70,62 @@
 
                                 </div>
                             </div>
-                            <div class="pagination">
-                                {{ $notes->links()}}
+                                @else
+                                    <h5 class="card-title">Les differents notes</h5>
+                                    @foreach($classes as $cls)
+                                    <h5 class="card-title">Notes de <b>{{$cls->filiere->intitule}} -> {{$cls->niveau->intitule}}</b>({{$cls->code}})</h5>
+                                        @foreach($cls->ue as $singelUe)
+                                        <h6>Notes de {{$singelUe->intitule}}</h6>
+                                        <div class="row">
+                                <div class="col-md-12">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Matricule</th>
+                                        <th scope="col">Noms & Prénoms</th>
+                                        <th scope="col">UE</th>
+                                        <th scope="col">Note de CC</th>
+                                        <th scope="col">Note de TP</th>
+                                        <th scope="col">Note de SN</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="stored-notes-result">
+                                        @foreach($singelUe->notes as $note)
+                                        <tr>
+                                            <td>{{$note->id}}</td>
+                                            <td>{{$note->etudiant->matricule}}</td>
+                                            <td>{{$note->etudiant->noms}}</td>
+                                            <td>{{$note->ue->intitule}}</td>
+                                            <td>{{$note->cc}}</td>
+                                            <td>{{$note->tp}}</td>
+                                            <td>{{$note->sn}}</td>
+                                            <td style="display:flex;justify-content:space-around;">
+                                                <form action="{{route('notes_delete',$note->id)}}" method="post">
+                                                                @CSRF
+                                                                <button class="btn btn-outline-danger">
+                                                                    <i class="bi bi-trash"></i>
+                                                                </button>
+                                                </form>
+                                                <a href="{{route('notes_edit',$note->id)}}">
+                                                <button class="btn btn-outline-info">
 
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                                        @endforeach
+                                    @endforeach
+                                @endif
+
+                            <div class="pagination">
                                 </div>
                         </div>
                     </div>

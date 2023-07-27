@@ -7,6 +7,7 @@ use App\Models\Note;
 use App\Http\Requests\StoreNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
 use App\Imports\NoteImport;
+use App\Models\Classe;
 use App\Models\UE;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -141,6 +142,7 @@ class NoteController extends Controller
 
     public function view_index()
     {
+        $classes = Classe::all();
         $ues = UE::all();
         $theUe = UE::where('id',Auth::user()->ue_id)->first();
         if(Auth::user()->role == "Admin"){
@@ -157,7 +159,8 @@ class NoteController extends Controller
         return View::make('pages.importations.notes', [
             'notes' => $notes,
             'ues' => $ues,
-            'theUe' => $profUe
+            'theUe' => $profUe,
+            'classes' => $classes
         ]);
     }
 

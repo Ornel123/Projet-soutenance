@@ -113,7 +113,7 @@ class EtudiantController extends Controller
     public function view_index()
     {
         $classes = Classe::all();
-        $etudiants = Etudiant::query()->paginate();
+        $etudiants = Etudiant::all();
         foreach($etudiants as $etd){
             $etd->classe = $etd->classe()->first();
         }

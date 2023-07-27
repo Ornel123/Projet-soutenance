@@ -37,8 +37,9 @@
 @endif
                 <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Les differents Classes</h5>
-
+                            <h5 class="card-header">Les differents Classes Par Filiers</h5>
+                            @foreach($filieres as $fil)
+                            <h5 class="card-header">{{ucfirst($fil->intitule)}}</h5>
                             <div class="row">
                                 <div class="col-md-12">
                                     <table class="table table-bordered">
@@ -53,7 +54,7 @@
                                         </tr>
                                         </thead>
                                         <tbody id="classes-result">
-                                            @foreach($classes as $class)
+                                            @foreach($fil->classes as $class)
                                                 <tr>
                                                     <td>{{$class->id}}</td>
                                                     <td>{{$class->code}}</td>
@@ -75,7 +76,7 @@
                                     {{$classes->links()}}
                                 </div>
                             </div>
-
+                            @endforeach
                         </div>
                     </div>
                     <div class="card">

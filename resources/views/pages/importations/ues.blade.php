@@ -35,64 +35,70 @@
         </ul>
     </div>
 @endif
+
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Unités d'Enseignement</h5>
-                     <div class="col-md-12">
+                            @foreach($classes as $cls)
+                            <?php $ues = $cls->ue ?>
 
-                            <div class="row">
-                <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">N°</th>
-                                            <th scope="col">Code</th>
-                                            <th scope="col">Intitulé</th>
-                                            <th scope="col">Classe</th>
-                                            <th scope="col">Semestre</th>
-                                            <th scope="col">Crédit</th>
-                                            <th scope="col">Est optionnelle</th>
-                                            <th scope="col">Possède TP</th>
-                                            <th scope="col">Retirer</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="ues-result">
-                                            @foreach($ues as $ue)
-                                            <tr>
-                                                <td>{{$ue->id}}</td>
-                                                <td>{{$ue->code}}</td>
-                                                <td>{{$ue->intitule}}</td>
-                                                <td>{{$ue->classe->intitule}}</td>
-                                                <td>{{$ue->semestre}}</td>
-                                                <td>{{$ue->credit}}</td>
-                                                <td>
-                                                    @if($ue->ue_optionelle == 1)
-                                                        Oui
-                                                    @else
-                                                        Non
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                @if($ue->tp_optionel == 1)
-                                                        Oui
-                                                    @else
-                                                        Non
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                <form action="{{route('ue_delete',$ue->id)}}" method="post">
-                                                            @CSRF
-                                                            <button class="btn btn-outline-danger">
-                                                                <i class="bi bi-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                    {{$ues->links()}}
-                                </div>
-                            </div>
+                            <h5 class="card-title">Unités d'Enseignement <b>{{$cls->filiere->intitule}} -> {{$cls->niveau->intitule}}</b></h5>
+                            <div class="col-md-12">
+
+<div class="row">
+<table class="table table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">N°</th>
+                <th scope="col">Code</th>
+                <th scope="col">Intitulé</th>
+                <th scope="col">Classe</th>
+                <th scope="col">Semestre</th>
+                <th scope="col">Crédit</th>
+                <th scope="col">Est optionnelle</th>
+                <th scope="col">Possède TP</th>
+                <th scope="col">Retirer</th>
+            </tr>
+            </thead>
+            <tbody id="ues-result">
+                @foreach($ues as $ue)
+                <tr>
+                    <td>{{$ue->id}}</td>
+                    <td>{{$ue->code}}</td>
+                    <td>{{$ue->intitule}}</td>
+                    <td>{{$ue->classe->intitule}}</td>
+                    <td>{{$ue->semestre}}</td>
+                    <td>{{$ue->credit}}</td>
+                    <td>
+                        @if($ue->ue_optionelle == 1)
+                            Oui
+                        @else
+                            Non
+                        @endif
+                    </td>
+                    <td>
+                    @if($ue->tp_optionel == 1)
+                            Oui
+                        @else
+                            Non
+                        @endif
+                    </td>
+                    <td>
+                    <form action="{{route('ue_delete',$ue->id)}}" method="post">
+                                @CSRF
+                                <button class="btn btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+                            @endforeach
+
 
                         </div>
                     </div>

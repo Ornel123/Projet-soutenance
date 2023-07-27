@@ -7,6 +7,7 @@ use App\Models\UE;
 use App\Http\Requests\StoreUERequest;
 use App\Http\Requests\UpdateUERequest;
 use App\Imports\UeImport;
+use App\Models\User;
 // use http\Env\Request;
 
 use Illuminate\Http\Response;
@@ -128,8 +129,13 @@ class UEController extends Controller
             return Redirect::back()->withErrors(["Cette UE posses les notes !"]);
         }
 
-        $searched_ue->delete();
+        //Suprimmer le proff lie a cette UE
+        $theProf = User::where('id',$searched_ue->prof_id)->first();
+        if($theProf){
+            $theProf->delete();
+        }
 
+        $searched_ue->delete();
         return redirect()->route('ues');
     }
 

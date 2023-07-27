@@ -21,15 +21,15 @@
         <div class="row">
             <div class="col-md-12">
                 <div id="import-container">
-
-
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Les Etudiants</h5>
-                     <div class="col-md-12">
-
-                            <div class="row">
-                <table class="table table-bordered">
+                            <h5 class="card-title">Les Etudiants Par Classes</h5>
+                            @foreach($classes as $class)
+                                <h5 class="card-title">{{$class->filiere->intitule}} -> {{$class->niveau->intitule}}</h5>
+                                <?php $etudiants = $class->etudiants ?>
+                                <div class="col-md-12">
+                                <div class="row">
+                                    <table class="table table-bordered">
                                         <thead>
                                         <tr>
                                             <th scope="col">N°</th>
@@ -62,9 +62,9 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    {{$etudiants->links()}}
                                 </div>
                             </div>
+                            @endforeach
 
                         </div>
                     </div>
@@ -101,7 +101,7 @@
                                                 <select id="code_niveau" name="classCode" class="form-select" required>
                                                         <option selected disabled>Choissisez la classe</option>
                                                         @foreach($classes as $clas)
-                                                            <option value="{{$clas->code}}">{{$clas->intitule}}</option>
+                                                            <option value="{{$clas->code}}">{{$clas->filiere->intitule}} -> {{$clas->niveau->intitule}} ({{$clas->code}})</option>
                                                         @endforeach
                                                     </select>
                                                 <input class="form-control" type="file" id="formFile" name="etudiant_file" required accept=".xlsx,.csv" />
@@ -172,7 +172,7 @@
                                                     <select id="code_classe" name="code_classe" class="form-select" required>
                                                         <option selected="">De quelle classe est l'étudiant ?</option>
                                                         @foreach($classes as $classe)
-                                                            <option value="{{$classe->code}}">{{$classe->code}}</option>
+                                                            <option value="{{$classe->code}}">{{$classe->filiere->intitule}} -> {{$classe->niveau->intitule}} ({{$classe->code}})</option>
                                                         @endforeach
                                                     </select>
                                                     <div class="invalid-feedback">
